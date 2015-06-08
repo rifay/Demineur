@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -33,8 +35,13 @@ public class GridBoard extends Observable {
     int nbCases;
     int cptUsedCase;
     int etatPartie;
+    Thread chronoThread;
 
     public GridBoard(int height, int lenght) {
+        initGrille(height, lenght);
+    }
+
+    public void initGrille(int height, int lenght) {
         this.height = height;
         this.lenght = lenght;
         cptUsedCase = 0;
@@ -65,16 +72,23 @@ public class GridBoard extends Observable {
 
     public void updateValue(int x, int y) {
         int process = grille[x][y].checkCase();
+
         if (process == -1) {
             etatPartie = GAME_OVER;
-        } else if (getNbCases() - getCptUsedCase() == getNbBombes()) {
+            stopChrono();
+        } else if (getNbCases() - getCptUsedCase() < getNbBombes()) {
             System.out.println("Gagné !");
-            etatPartie= PARTIE_GAGNE;
+            etatPartie = PARTIE_GAGNE;
+            stopChrono();
         } else if (process == 0) {
             etatPartie = PARTIE_EN_COURS;
         }
         setChanged();
         notifyObservers();
+    }
+
+    public void stopChrono() {
+        chronoThread.stop();
     }
 
     public List getVoisins(Case c) {
@@ -140,7 +154,6 @@ public class GridBoard extends Observable {
             this.nbBombes = nbBombes + 1;
         } else if (grille[x][y].getStatus() == Case.CASE_INTERROGATIVE) {
             grille[x][y].setStatus(Case.CASE_NOUVELLE);
-            this.nbBombes = nbBombes + 1;
         }
         setChanged();
         notifyObservers();
@@ -161,7 +174,7 @@ public class GridBoard extends Observable {
     }
 
     public void startChrono() {
-        Thread t = new Thread(new Runnable() {
+        chronoThread = new Thread(new Runnable() {
 
             @Override
             public void run() {
@@ -172,7 +185,7 @@ public class GridBoard extends Observable {
 
             }
         });
-        t.start();
+        chronoThread.start();
     }
 
     public int getNbCases() {

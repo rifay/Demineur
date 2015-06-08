@@ -51,15 +51,14 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
         gLayout = new GridLayout(height, lenght);
         jPanel_Principal.setLayout(new GridBagLayout());
         jPanel_Principal.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-        
-        
+
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < lenght; j++) {
                 final int x = i;
                 final int y = j;
                 gridButton[i][j] = new JButton();
-                gridButton[i][j].setPreferredSize(new Dimension(40, 40)); 
-               gridButton[i][j].setContentAreaFilled(false);
+                gridButton[i][j].setPreferredSize(new Dimension(40, 40));
+                gridButton[i][j].setContentAreaFilled(false);
                 gridButton[i][j].setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
                 gridButton[i][j].setFocusPainted(false);
                 gridButton[i][j].setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -67,13 +66,13 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                 gridButton[i][j].addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        if (e.getModifiers() == MouseEvent.BUTTON3_MASK){
+                        if (e.getModifiers() == MouseEvent.BUTTON3_MASK) {
                             rightClicCase(x, y);
-                        }else if (e.getModifiers() == MouseEvent.BUTTON1_MASK){
+                        } else if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
                             System.out.println("clic gauche");
                             leftClicCase(x, y);
                         }
-                        
+
                     }
                 });
                 GridBagConstraints gbc = new GridBagConstraints();
@@ -81,7 +80,7 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                 gbc.gridy = j;
                 jPanel_Principal.add(gridButton[i][j], gbc);
 
-                
+
             }
         }
         grille.startChrono();
@@ -93,13 +92,9 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
 
         if (gridButton[x][y].isEnabled()) {
             grille.updateValue(x, y);
-            if (grille.getEtatPartie()!=grille.PARTIE_EN_COURS){
-                //L'utilisateur a perdu
-                afficherGrilleFinale(grille.getEtatPartie());
-            }
         }
     }
-    
+
     private void rightClicCase(int x, int y) {
 
         if (gridButton[x][y].isEnabled()) {
@@ -224,7 +219,6 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel_chrono;
@@ -235,38 +229,40 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
     @Override
     public void update(Observable o, Object o1) {
         GridBoard tempGrid = (GridBoard) o;
-        new Date(tempGrid.getTimeActuel());
         DateFormat formatter = new SimpleDateFormat("mm:ss");
         jLabel_chrono.setText(formatter.format(tempGrid.getTimeActuel()));
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < lenght; j++) {
-                Case tempCase = tempGrid.getGrille()[i][j];
-                if (tempCase.getStatus() == Case.CASE_AFFICHER) {
-                    gridButton[i][j].setText(" " + Integer.toString(tempCase.getValue()) + " ");
-                    gridButton[i][j].setEnabled(false);
-                    gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
-                
-                } else if (tempCase.getStatus() == Case.CASE_INUTILE) {
-                    gridButton[i][j].setEnabled(false);
-                    gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
-                }else if (tempCase.getStatus() == Case.CASE_DRAPEAU) {
-                    gridButton[i][j].setText("D");
-                }else if (tempCase.getStatus() == Case.CASE_INTERROGATIVE) {
-                    gridButton[i][j].setText("?");
-                }else if (tempCase.getStatus() == Case.CASE_NOUVELLE) {
-                    gridButton[i][j].setText(" 0 ");
+        if (tempGrid.getEtatPartie() == tempGrid.PARTIE_EN_COURS) {
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < lenght; j++) {
+                    Case tempCase = tempGrid.getGrille()[i][j];
+                    if (tempCase.getStatus() == Case.CASE_AFFICHER) {
+                        gridButton[i][j].setText(" " + Integer.toString(tempCase.getValue()) + " ");
+                        gridButton[i][j].setEnabled(false);
+                        gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+                    } else if (tempCase.getStatus() == Case.CASE_INUTILE) {
+                        gridButton[i][j].setEnabled(false);
+                        gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
+                    } else if (tempCase.getStatus() == Case.CASE_DRAPEAU) {
+                        gridButton[i][j].setText("D");
+                    } else if (tempCase.getStatus() == Case.CASE_INTERROGATIVE) {
+                        gridButton[i][j].setText("?");
+                    } else if (tempCase.getStatus() == Case.CASE_NOUVELLE) {
+                        gridButton[i][j].setText(" 0 ");
+                    }
                 }
-
             }
-
+        } else {
+            //L'utilisateur a perdu
+            afficherGrilleFinale(grille.getEtatPartie());
         }
 
         //gridLabel[tempCase.getX()][tempCase.getY()].setText(Integer.toString(tempCase.getValue()));
     }
 
     /**
-     * 
-     * @param value si on a gagné, perdu à cause d'un timeout ou à cause d'une bombre 
+     *
+     * @param value si on a gagné, perdu
      */
     private void afficherGrilleFinale(int value) {
         for (int i = 0; i < height; i++) {
@@ -283,9 +279,8 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                     }
                 } else if (grille.getGrille()[i][j].getBombe()) {
                     gridButton[i][j].setText("B");
-                } else {
-
                 }
+                gridButton[i][j].setEnabled(false);
             }
         }
     }

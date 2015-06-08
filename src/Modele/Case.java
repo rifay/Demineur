@@ -75,7 +75,7 @@ public class Case {
     public void propagerCase() {
         List<Case> listeVoisins = new ArrayList();
         List<Case> listePropagationVoisins = new ArrayList();
-
+        this.value=0;
         listeVoisins = grille.getVoisins(this);
         for (Case voisin : listeVoisins) {
             if (voisin.getBombe()) {
@@ -89,7 +89,6 @@ public class Case {
             listePropagationVoisins = grille.getVoisinsDePropagation(this);
             for (Case propagationCase : listePropagationVoisins) {
                 if (propagationCase.getStatus()!=CASE_INUTILE && propagationCase.getStatus()!=CASE_DRAPEAU){
-                    System.out.println(""+propagationCase.value);
                     propagationCase.propagerCase();
                 }
             }
