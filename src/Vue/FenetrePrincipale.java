@@ -9,6 +9,9 @@ import Modele.Case;
 import Modele.GridBoard;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -46,18 +49,21 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
         grille = new GridBoard(height, lenght);
         gridButton = new JButton[height][lenght];
         gLayout = new GridLayout(height, lenght);
-        jPanel_Principal.setLayout(gLayout);
+        jPanel_Principal.setLayout(new GridBagLayout());
         jPanel_Principal.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         
         
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < lenght; j++) {
-                int x = i;
-                int y = j;
+                final int x = i;
+                final int y = j;
                 gridButton[i][j] = new JButton();
-                gridButton[i][j].setSize(200, 200);
+                gridButton[i][j].setPreferredSize(new Dimension(40, 40)); 
+               gridButton[i][j].setContentAreaFilled(false);
+                gridButton[i][j].setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+                gridButton[i][j].setFocusPainted(false);
+                gridButton[i][j].setMargin(new java.awt.Insets(2, 2, 2, 2));
                 gridButton[i][j].setText(Integer.toString(grille.getGrille()[i][j].getValue()));
-                //gridButton[i][j].setBorder(raisedbevel);
                 gridButton[i][j].addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
@@ -70,8 +76,12 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                         
                     }
                 });
-                jPanel_Principal.add(gridButton[i][j]);
+                GridBagConstraints gbc = new GridBagConstraints();
+                gbc.gridx = i;
+                gbc.gridy = j;
+                jPanel_Principal.add(gridButton[i][j], gbc);
 
+                
             }
         }
         grille.startChrono();
@@ -108,11 +118,16 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
 
         jPanel_Haut = new javax.swing.JPanel();
         jLabel_chrono = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jPanel_Principal = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel_chrono.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/clock.png"))); // NOI18N
+
+        jButton1.setText("jButton1");
+        jButton1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jButton1.setContentAreaFilled(false);
 
         javax.swing.GroupLayout jPanel_HautLayout = new javax.swing.GroupLayout(jPanel_Haut);
         jPanel_Haut.setLayout(jPanel_HautLayout);
@@ -121,14 +136,18 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
             .addGroup(jPanel_HautLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addComponent(jLabel_chrono)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(59, 59, 59)
+                .addComponent(jButton1)
+                .addContainerGap(87, Short.MAX_VALUE))
         );
         jPanel_HautLayout.setVerticalGroup(
             jPanel_HautLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_HautLayout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(jLabel_chrono)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel_HautLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton1)
+                    .addComponent(jLabel_chrono))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         jLabel_chrono.getAccessibleContext().setAccessibleName("jLabel_chrono");
@@ -152,7 +171,9 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel_Principal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel_Haut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel_Haut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(38, 38, 38)))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -179,7 +200,7 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -205,6 +226,7 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel_chrono;
     private javax.swing.JPanel jPanel_Haut;
     private javax.swing.JPanel jPanel_Principal;
@@ -222,9 +244,11 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                 if (tempCase.getStatus() == Case.CASE_AFFICHER) {
                     gridButton[i][j].setText(" " + Integer.toString(tempCase.getValue()) + " ");
                     gridButton[i][j].setEnabled(false);
-                    gridButton[i][j].setBackground(Color.blue);
+                    gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
+                
                 } else if (tempCase.getStatus() == Case.CASE_INUTILE) {
                     gridButton[i][j].setEnabled(false);
+                    gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
                 }else if (tempCase.getStatus() == Case.CASE_DRAPEAU) {
                     gridButton[i][j].setText("D");
                 }else if (tempCase.getStatus() == Case.CASE_INTERROGATIVE) {
