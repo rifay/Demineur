@@ -80,7 +80,6 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                 gbc.gridy = j;
                 jPanel_Principal.add(gridButton[i][j], gbc);
 
-
             }
         }
         grille.startChrono();
@@ -114,6 +113,7 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
         jPanel_Haut = new javax.swing.JPanel();
         jLabel_chrono = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jButton_Recommencer = new javax.swing.JButton();
         jPanel_Principal = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -124,6 +124,13 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
         jButton1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jButton1.setContentAreaFilled(false);
 
+        jButton_Recommencer.setText("Recommencer");
+        jButton_Recommencer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_RecommencerActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel_HautLayout = new javax.swing.GroupLayout(jPanel_Haut);
         jPanel_Haut.setLayout(jPanel_HautLayout);
         jPanel_HautLayout.setHorizontalGroup(
@@ -133,14 +140,18 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                 .addComponent(jLabel_chrono)
                 .addGap(59, 59, 59)
                 .addComponent(jButton1)
-                .addContainerGap(87, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                .addComponent(jButton_Recommencer)
+                .addContainerGap())
         );
         jPanel_HautLayout.setVerticalGroup(
             jPanel_HautLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_HautLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addGap(16, 16, 16)
                 .addGroup(jPanel_HautLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
+                    .addGroup(jPanel_HautLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton1)
+                        .addComponent(jButton_Recommencer))
                     .addComponent(jLabel_chrono))
                 .addContainerGap(38, Short.MAX_VALUE))
         );
@@ -151,7 +162,7 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
         jPanel_Principal.setLayout(jPanel_PrincipalLayout);
         jPanel_PrincipalLayout.setHorizontalGroup(
             jPanel_PrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 266, Short.MAX_VALUE)
+            .addGap(0, 306, Short.MAX_VALUE)
         );
         jPanel_PrincipalLayout.setVerticalGroup(
             jPanel_PrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -164,12 +175,10 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel_Principal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel_Haut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(38, 38, 38)))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel_Principal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel_Haut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -183,6 +192,10 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton_RecommencerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_RecommencerActionPerformed
+        grille.initGrille(height, lenght);
+    }//GEN-LAST:event_jButton_RecommencerActionPerformed
 
     /**
      * @param args the command line arguments
@@ -221,6 +234,7 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton_Recommencer;
     private javax.swing.JLabel jLabel_chrono;
     private javax.swing.JPanel jPanel_Haut;
     private javax.swing.JPanel jPanel_Principal;
@@ -249,6 +263,8 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                         gridButton[i][j].setText("?");
                     } else if (tempCase.getStatus() == Case.CASE_NOUVELLE) {
                         gridButton[i][j].setText(" 0 ");
+                        gridButton[i][j].setEnabled(true);
+                        gridButton[i][j].setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
                     }
                 }
             }

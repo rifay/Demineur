@@ -67,7 +67,8 @@ public class GridBoard extends Observable {
                 i++;
             }
         }
-
+        setChanged();
+        notifyObservers();
     }
 
     public void updateValue(int x, int y) {
