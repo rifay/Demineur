@@ -6,6 +6,13 @@
 package Modele;
 
 import java.awt.Point;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +26,7 @@ import java.util.logging.Logger;
  *
  * @author rifayath.david
  */
-public class GridBoard extends Observable {
+public class GridBoard extends Observable implements Serializable {
 
     public final int PARTIE_EN_COURS = 0;
     public final int GAME_OVER = -1;
@@ -36,19 +43,48 @@ public class GridBoard extends Observable {
     int cptUsedCase;
     int etatPartie;
     Thread chronoThread;
+    Map<String, List<Score>> allScore;
 
-    public GridBoard(int height, int lenght) {
-        initGrille(height, lenght);
+    List<Score> facileScore = null;
+    List<Score> moyenScore = null;
+    List<Score> difficileScore = null;
+    int niveau;
+
+    public GridBoard(int niveauPartie) {
+        this.allScore = new HashMap<String, List<Score>>();
+        niveau = niveauPartie;
+        if (niveau == 1) {
+            height = 9;
+            lenght = 9;
+            nbBombes = 10;
+        } else if (niveau == 2) {
+            height = 16;
+            lenght = 16;
+            nbBombes = 40;
+        } else if (niveau == 3) {
+            height = 30;
+            lenght = 16;
+            nbBombes = 99;
+        }
+        initGrille();
     }
 
-    public void initGrille(int height, int lenght) {
-        this.height = height;
-        this.lenght = lenght;
+    public int getLenght() {
+        return lenght;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void initGrille() {
         cptUsedCase = 0;
         coordonnesMap = new HashMap<Object, Point>();
         tempsDebut = System.currentTimeMillis();
+        startChrono();
         grille = new Case[height][lenght];
         etatPartie = PARTIE_EN_COURS;
+        allScore = chargerScore();
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < lenght; j++) {
                 grille[i][j] = new Case(this);
@@ -56,7 +92,6 @@ public class GridBoard extends Observable {
             }
         }
         nbCases = this.lenght * this.height;
-        nbBombes = lenght - 1;
         int i = 0;
         while (i < nbBombes) {
             Random rnd = new Random();
@@ -174,6 +209,10 @@ public class GridBoard extends Observable {
         return tempsActuel;
     }
 
+    public Map<String, List<Score>> getAllScore() {
+        return allScore;
+    }
+    
     public void startChrono() {
         chronoThread = new Thread(new Runnable() {
 
@@ -217,12 +256,97 @@ public class GridBoard extends Observable {
         return grille;
     }
 
+//    public List<Score> getAllScores() {
+//        return allScores;
+//    }
+
     public int getEtatPartie() {
         return etatPartie;
     }
 
     public void setEtatPartie(int etatPartie) {
         this.etatPartie = etatPartie;
+    }
+
+    public Map<String, List<Score>> chargerScore() {
+        try {
+            FileInputStream fileIn = new FileInputStream("score.ser");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            allScore = (Map<String, List<Score>>) in.readObject();
+            in.close();
+            fileIn.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+            return null;
+        } catch (ClassNotFoundException c) {
+            System.out.println("Score class not found");
+            c.printStackTrace();
+            return null;
+        }
+
+        return allScore;
+    }
+
+    public void sauvegarder(String name) {
+        Score newScore = new Score(name, getTimeActuel(), niveau);
+        List<Score> scores = null;
+        if (allScore !=null){
+            scores = allScore.get(String.valueOf(niveau));
+        }else{
+            allScore = new HashMap<String, List<Score>>();
+        }
+        if (isBetterScore(newScore,scores)) {
+            if (scores != null) {
+                if (scores.size() == 10) {
+                    scores.remove(9);
+                }
+                scores.add(newScore);
+                scores.sort(null);
+            } else {
+                scores = new ArrayList<>();
+                scores.add(newScore);
+            }
+            allScore.put(String.valueOf(niveau), scores);
+            try {
+                FileOutputStream score = new FileOutputStream(new File("score.ser"));
+                ObjectOutputStream out = new ObjectOutputStream(score);
+                out.writeObject(allScore);
+                out.close();
+                score.close();
+            } catch (IOException i) {
+                i.printStackTrace();
+            }
+
+        }
+    }
+
+    private boolean isBetterScore(Score newScore, List<Score> listScore) {
+        boolean existingLevel=false;
+        if (listScore != null) {
+            for (Score score : listScore) {
+                if (score.getNiveau() == newScore.getNiveau()) {
+                    existingLevel=true;
+                    if (score.compareTo(newScore) > 0) {
+                        return true;
+                    }
+                }
+            }
+            if (!existingLevel){
+                return true; //On a pas de score enregistré pour ce niveau, donc il faut enregistrer
+            }else{
+                return false;
+            }
+            
+        }
+        return true;
+    }
+
+    private void remplirList() {
+        for (Map.Entry<Object, Point> entrySet : coordonnesMap.entrySet()) {
+                Object key = entrySet.getKey();
+                Point value = entrySet.getValue();
+                
+            }
     }
 
 }

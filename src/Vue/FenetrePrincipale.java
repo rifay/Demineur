@@ -25,6 +25,7 @@ import java.util.Observer;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
@@ -38,17 +39,17 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
     /**
      * Creates new form FenetrePrincipale
      */
-    private final int height = 5;
-    private final int lenght = 6;
+    private final int height;
+    private final int lenght;
     private GridBoard grille;
-    private GridLayout gLayout;
     private JButton gridButton[][];
 
-    public FenetrePrincipale() {
+    public FenetrePrincipale(int niveauPartie) {
         initComponents();
-        grille = new GridBoard(height, lenght);
+        grille = new GridBoard(niveauPartie);
+        height = grille.getHeight();
+        lenght = grille.getLenght();
         gridButton = new JButton[height][lenght];
-        gLayout = new GridLayout(height, lenght);
         jPanel_Principal.setLayout(new GridBagLayout());
         jPanel_Principal.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 
@@ -57,7 +58,7 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                 final int x = i;
                 final int y = j;
                 gridButton[i][j] = new JButton();
-                gridButton[i][j].setPreferredSize(new Dimension(40, 40));
+                gridButton[i][j].setPreferredSize(new Dimension(25, 25));
                 gridButton[i][j].setContentAreaFilled(false);
                 gridButton[i][j].setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
                 gridButton[i][j].setFocusPainted(false);
@@ -75,14 +76,14 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
 
                     }
                 });
-                GridBagConstraints gbc = new GridBagConstraints();
+                GridBagConstraints gbc = new GridBagConstraints();                
                 gbc.gridx = i;
                 gbc.gridy = j;
                 jPanel_Principal.add(gridButton[i][j], gbc);
 
             }
         }
-        grille.startChrono();
+        //grille.startChrono();
         grille.addObserver(this);
         //this.add();
     }
@@ -112,48 +113,30 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
 
         jPanel_Haut = new javax.swing.JPanel();
         jLabel_chrono = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton_Recommencer = new javax.swing.JButton();
         jPanel_Principal = new javax.swing.JPanel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu_Fichier = new javax.swing.JMenu();
+        jMenuItem_scores = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel_chrono.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/clock.png"))); // NOI18N
-
-        jButton1.setText("jButton1");
-        jButton1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jButton1.setContentAreaFilled(false);
-
-        jButton_Recommencer.setText("Recommencer");
-        jButton_Recommencer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_RecommencerActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel_HautLayout = new javax.swing.GroupLayout(jPanel_Haut);
         jPanel_Haut.setLayout(jPanel_HautLayout);
         jPanel_HautLayout.setHorizontalGroup(
             jPanel_HautLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_HautLayout.createSequentialGroup()
-                .addGap(19, 19, 19)
+                .addGap(32, 32, 32)
                 .addComponent(jLabel_chrono)
-                .addGap(59, 59, 59)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                .addComponent(jButton_Recommencer)
-                .addContainerGap())
+                .addContainerGap(248, Short.MAX_VALUE))
         );
         jPanel_HautLayout.setVerticalGroup(
             jPanel_HautLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_HautLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addGroup(jPanel_HautLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel_HautLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton1)
-                        .addComponent(jButton_Recommencer))
-                    .addComponent(jLabel_chrono))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addGap(25, 25, 25)
+                .addComponent(jLabel_chrono)
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         jLabel_chrono.getAccessibleContext().setAccessibleName("jLabel_chrono");
@@ -169,6 +152,20 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
             .addGap(0, 259, Short.MAX_VALUE)
         );
 
+        jMenu_Fichier.setText("Fichier");
+
+        jMenuItem_scores.setText("Scores");
+        jMenuItem_scores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem_scoresActionPerformed(evt);
+            }
+        });
+        jMenu_Fichier.add(jMenuItem_scores);
+
+        jMenuBar1.add(jMenu_Fichier);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -178,7 +175,7 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel_Principal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel_Haut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(107, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -187,55 +184,57 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                 .addComponent(jPanel_Haut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel_Principal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton_RecommencerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_RecommencerActionPerformed
-        grille.initGrille(height, lenght);
-    }//GEN-LAST:event_jButton_RecommencerActionPerformed
+    private void jMenuItem_scoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_scoresActionPerformed
+        ScoreScreen scoreScreen = new ScoreScreen(this, true, grille);
+        scoreScreen.setVisible(true);
+    }//GEN-LAST:event_jMenuItem_scoresActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FenetrePrincipale.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FenetrePrincipale.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FenetrePrincipale.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FenetrePrincipale.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
-        //java.util.Arrays.useLegacyMergeSort=true;
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FenetrePrincipale().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Windows".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(FenetrePrincipale.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(FenetrePrincipale.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(FenetrePrincipale.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(FenetrePrincipale.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//        System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
+//        //java.util.Arrays.useLegacyMergeSort=true;
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new FenetrePrincipale().setVisible(true);
+//            }
+//        });
+//    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton_Recommencer;
     private javax.swing.JLabel jLabel_chrono;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem_scores;
+    private javax.swing.JMenu jMenu_Fichier;
     private javax.swing.JPanel jPanel_Haut;
     private javax.swing.JPanel jPanel_Principal;
     // End of variables declaration//GEN-END:variables
@@ -269,8 +268,31 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                 }
             }
         } else {
-            //L'utilisateur a perdu
+            //L'utilisateur a perdu ou gagné
             afficherGrilleFinale(grille.getEtatPartie());
+            Object[] options = new Object[2];
+            options[0] = "Recommencer";
+            options[1] = "Nouvelle Partie";
+
+            int n = JOptionPane.showOptionDialog(this,
+                    "Que voulez-vous faire ?",
+                    "What next ... ?",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null, //do not use a custom Icon
+                    options, //the titles of buttons
+                    options[0]); //default button title
+            if (grille.getEtatPartie() == grille.PARTIE_GAGNE) {
+                String name = JOptionPane.showInputDialog("Votre nom: ");
+                grille.sauvegarder(name);
+            }
+            if (n == 0) {
+                grille.initGrille();
+            } else {
+                this.dispose();
+                MenuScreen.main(new String[2]);
+                
+            }
         }
 
         //gridLabel[tempCase.getX()][tempCase.getY()].setText(Integer.toString(tempCase.getValue()));
@@ -299,5 +321,9 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                 gridButton[i][j].setEnabled(false);
             }
         }
+    }
+
+    public GridBoard getGrille() {
+        return grille;
     }
 }
