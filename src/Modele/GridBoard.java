@@ -58,15 +58,15 @@ public class GridBoard extends Observable implements Serializable {
         if (niveau == 1) {
             height = 9;
             lenght = 9;
-            NB_BOMBES = 1;
+            NB_BOMBES = 10;
         } else if (niveau == 2) {
             height = 16;
             lenght = 16;
-            NB_BOMBES = 4;
+            NB_BOMBES = 40;
         } else {
             height = 30;
             lenght = 16;
-            NB_BOMBES = 9;
+            NB_BOMBES = 99;
         }
         
         initGrille();
