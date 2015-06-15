@@ -61,7 +61,7 @@ public class Case {
     public int checkCase() {
         if (this.bombe) {
             //On vient cliqué sur une bombe, partie terminé
-            System.out.println("on a une bombe");
+            status = CASE_AFFICHER;
             return -1;
         } else {
             //la case ne contient pas de bombes, donc demander la propagation

@@ -35,6 +35,9 @@ public class GridBoard extends Observable implements Serializable {
     public final int GAME_OVER = -1;
     public final int PARTIE_GAGNE = 1;
     public final int NB_BOMBES;
+    static public final int LVL_FACILE=1;
+    static public final int LVL_MOYEN=2;
+    static public final int LVL_DIFFICILE=3;
     Case[][] grille;
     int lenght;
     int height;
@@ -55,11 +58,11 @@ public class GridBoard extends Observable implements Serializable {
     public GridBoard(int niveauPartie) {
         this.allScore = new HashMap<String, List<Score>>();
         niveau = niveauPartie;
-        if (niveau == 1) {
+        if (niveau == LVL_FACILE) {
             height = 9;
             lenght = 9;
             NB_BOMBES = 10;
-        } else if (niveau == 2) {
+        } else if (niveau == LVL_MOYEN) {
             height = 16;
             lenght = 16;
             NB_BOMBES = 40;

@@ -5,6 +5,7 @@
  */
 package Vue;
 
+import Modele.GridBoard;
 import javax.swing.JOptionPane;
 
 /**
@@ -51,6 +52,7 @@ public class MenuScreen extends javax.swing.JDialog {
         jPanel1.setName(""); // NOI18N
 
         buttonGroup1.add(jRadioButton_NiveauF);
+        jRadioButton_NiveauF.setSelected(true);
         jRadioButton_NiveauF.setText("Facile");
 
         buttonGroup1.add(jRadioButton_NiveauM);
@@ -124,11 +126,11 @@ public class MenuScreen extends javax.swing.JDialog {
 
     private void jButton_lancerPartieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_lancerPartieActionPerformed
         if (jRadioButton_NiveauF.isSelected()) {
-            niveauPartie = 1;
+            niveauPartie = GridBoard.LVL_FACILE;
         } else if (jRadioButton_NiveauM.isSelected()) {
-            niveauPartie = 2;
+            niveauPartie = GridBoard.LVL_MOYEN;
         } else if (jRadioButton_NiveauD.isSelected()) {
-            niveauPartie = 3;
+            niveauPartie = GridBoard.LVL_DIFFICILE;
         }
         if (niveauPartie == -1) {
             JOptionPane.showMessageDialog(this,

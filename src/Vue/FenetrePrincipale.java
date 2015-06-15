@@ -46,6 +46,17 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
 
     public FenetrePrincipale(int niveauPartie) {
         initComponents();
+        switch (niveauPartie) {
+            case GridBoard.LVL_FACILE:
+                setSize(450,300);
+                break;
+            case GridBoard.LVL_MOYEN:
+                setSize(450,450);
+                break;
+            case GridBoard.LVL_DIFFICILE:
+                setSize(600,450);
+                break;
+        }
         grille = new GridBoard(niveauPartie);
         height = grille.getHeight();
         lenght = grille.getLenght();
@@ -58,11 +69,12 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                 final int x = i;
                 final int y = j;
                 gridButton[i][j] = new JButton();
-                gridButton[i][j].setPreferredSize(new Dimension(25, 25));
+                gridButton[i][j].setPreferredSize(new Dimension(15, 15));
                 gridButton[i][j].setContentAreaFilled(false);
                 gridButton[i][j].setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
                 gridButton[i][j].setFocusPainted(false);
-                gridButton[i][j].setMargin(new java.awt.Insets(2, 2, 2, 2));
+                gridButton[i][j].setMargin(new java.awt.Insets(1, 1, 1, 1));
+                gridButton[i][j].setFont(new java.awt.Font("Tahoma", 0, 10));
                 gridButton[i][j].setText(Integer.toString(grille.getGrille()[i][j].getValue()));
                 gridButton[i][j].addMouseListener(new MouseAdapter() {
                     @Override
@@ -76,7 +88,7 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
 
                     }
                 });
-                GridBagConstraints gbc = new GridBagConstraints();                
+                GridBagConstraints gbc = new GridBagConstraints();
                 gbc.gridx = i;
                 gbc.gridy = j;
                 jPanel_Principal.add(gridButton[i][j], gbc);
@@ -136,9 +148,9 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_HautLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jlabelBombLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 132, Short.MAX_VALUE)
                 .addComponent(jLabel_chrono, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36))
+                .addContainerGap())
         );
         jPanel_HautLayout.setVerticalGroup(
             jPanel_HautLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,11 +168,11 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
         jPanel_Principal.setLayout(jPanel_PrincipalLayout);
         jPanel_PrincipalLayout.setHorizontalGroup(
             jPanel_PrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 306, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanel_PrincipalLayout.setVerticalGroup(
             jPanel_PrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 259, Short.MAX_VALUE)
+            .addGap(0, 53, Short.MAX_VALUE)
         );
 
         jMenu_Fichier.setText("Fichier");
@@ -182,22 +194,22 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel_Principal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel_Haut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(47, Short.MAX_VALUE)
-                .addComponent(jPanel_Haut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel_Principal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jPanel_Haut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel_Principal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
 
         pack();
@@ -207,7 +219,6 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
         ScoreScreen scoreScreen = new ScoreScreen(this, true, grille);
         scoreScreen.setVisible(true);
     }//GEN-LAST:event_jMenuItem_scoresActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -258,31 +269,36 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
         GridBoard tempGrid = (GridBoard) o;
         DateFormat formatter = new SimpleDateFormat("mm:ss");
         jLabel_chrono.setText(formatter.format(tempGrid.getTimeActuel()));
-        jlabelBombLeft.setText(""+tempGrid.getNbFlagLeft());
-        if (tempGrid.getEtatPartie() == tempGrid.PARTIE_EN_COURS) {
+        jlabelBombLeft.setText("" + tempGrid.getNbFlagLeft());
+        
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < lenght; j++) {
                     Case tempCase = tempGrid.getGrille()[i][j];
                     if (tempCase.getStatus() == Case.CASE_AFFICHER) {
-                        gridButton[i][j].setText(" " + Integer.toString(tempCase.getValue()) + " ");
-                        gridButton[i][j].setEnabled(false);
+                        gridButton[i][j].setText(colorInt(tempCase.getValue()));
+                        //gridButton[i][j].setEnabled(false);
                         gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
                     } else if (tempCase.getStatus() == Case.CASE_INUTILE) {
-                        gridButton[i][j].setEnabled(false);
+                       // gridButton[i][j].setEnabled(false);
                         gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
+                        gridButton[i][j].setIcon(null);
+                        gridButton[i][j].setText("");
                     } else if (tempCase.getStatus() == Case.CASE_DRAPEAU) {
-                        gridButton[i][j].setText("D");
+                        gridButton[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/flag.png")));
+                        gridButton[i][j].setText("");
                     } else if (tempCase.getStatus() == Case.CASE_INTERROGATIVE) {
+                        gridButton[i][j].setIcon(null);
                         gridButton[i][j].setText("?");
                     } else if (tempCase.getStatus() == Case.CASE_NOUVELLE) {
-                        gridButton[i][j].setText(" 0 ");
+                        gridButton[i][j].setIcon(null);
+                        gridButton[i][j].setText("");
                         gridButton[i][j].setEnabled(true);
                         gridButton[i][j].setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
                     }
                 }
             }
-        } else {
+       if (tempGrid.getEtatPartie() != tempGrid.PARTIE_EN_COURS) {
             //L'utilisateur a perdu ou gagné
             afficherGrilleFinale(grille.getEtatPartie());
             Object[] options = new Object[2];
@@ -291,7 +307,7 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
 
             int n = JOptionPane.showOptionDialog(this,
                     "Que voulez-vous faire ?",
-                    "What next ... ?",
+                    "What's next ... ?",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE,
                     null, //do not use a custom Icon
@@ -306,7 +322,7 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
             } else {
                 this.dispose();
                 MenuScreen.main(new String[2]);
-                
+
             }
         }
 
@@ -326,19 +342,62 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                     if (grille.getGrille()[i][j].getBombe()) {
                         //Presence d'une bombe, donc bombe désamorcé
                         //Affiché bombe barré
-                        gridButton[i][j].setText("X");
+                        gridButton[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/bombNone.png")));
+                        gridButton[i][j].setText("");
                     } else {
-                        gridButton[i][j].setText("I");
+                        gridButton[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/flag.png")));
+                        gridButton[i][j].setText("");
                     }
                 } else if (grille.getGrille()[i][j].getBombe()) {
-                    gridButton[i][j].setText("B");
+                    if (grille.getGrille()[i][j].getStatus()==Case.CASE_AFFICHER)
+                    {
+                        gridButton[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/bombExplosed.png")));
+                        gridButton[i][j].setText("");
+                    }else 
+                    {
+                        gridButton[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/bomb.png")));
+                        gridButton[i][j].setText("");
+                    }
+                    
+                }else if (grille.getGrille()[i][j].getStatus() == Case.CASE_AFFICHER) {
+                        gridButton[i][j].setText(colorInt(grille.getGrille()[i][j].getValue()));
+                        
+                        gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+                   
                 }
-                gridButton[i][j].setEnabled(false);
+                //gridButton[i][j].setEnabled(false);
             }
         }
     }
 
     public GridBoard getGrille() {
         return grille;
+    }
+
+    private String colorInt(int value) {
+       String color="";
+        switch(value){
+            case 1: 
+                color = "0000FF";
+                break;
+            case 2:
+                color = "008200";
+                break;
+            case 3:
+                color = "FF0000";
+                break;
+            case 4:
+                color = "000084";
+                break;
+            case 5:
+                color = "8B0000";
+                break;
+            default:
+                color = "008284";
+                break;
+                
+        }
+       return "<html><span style=\"font-weight:bold; color:#"+color+";\">"+value+"</span></html>";
     }
 }
