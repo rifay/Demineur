@@ -43,4 +43,14 @@ Temporary Items
 .apdisk
 *.class
 *.class
+<<<<<<< HEAD
 /dist/
+=======
+/dist/
+nbproject/private/private.properties
+nbproject/private/private.xml
+*.class
+*.class
+build/classes/Vue/MenuScreen.form
+>>>>>>> origin/master
+build/classes/Vue/MenuScreen.form
