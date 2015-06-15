@@ -5,6 +5,7 @@
  */
 package Vue;
 
+import Modele.GridBoard;
 import javax.swing.JOptionPane;
 
 /**
@@ -53,6 +54,7 @@ public class MenuScreen extends javax.swing.JDialog {
         jPanel1.setName(""); // NOI18N
 
         buttonGroup1.add(jRadioButton_NiveauF);
+        jRadioButton_NiveauF.setSelected(true);
         jRadioButton_NiveauF.setText("Facile");
 
         buttonGroup1.add(jRadioButton_NiveauM);

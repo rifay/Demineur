@@ -61,7 +61,7 @@ public class Case {
     public int checkCase() {
         if (this.bombe) {
             //On vient cliqué sur une bombe, partie terminé
-            System.out.println("on a une bombe");
+            status = CASE_AFFICHER;
             return -1;
         } else {
             //la case ne contient pas de bombes, donc demander la propagation
@@ -84,7 +84,7 @@ public class Case {
             if (this.value == 0) {
                 this.status = CASE_INUTILE;
                 grille.incrementCptUsedCase();
-                listePropagationVoisins = grille.getVoisinsDePropagation(this);
+                listePropagationVoisins = grille.getVoisins(this);
                 for (Case propagationCase : listePropagationVoisins) {
                     if (propagationCase.getStatus() != CASE_INUTILE && propagationCase.getStatus() != CASE_DRAPEAU) {
                         propagationCase.propagerCase();

@@ -17,14 +17,17 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -42,6 +45,7 @@ public class ScoreScreen extends javax.swing.JFrame {
     JPanel[] ongletsPanel = new JPanel[3];
     JLabel[] titreOnglet = new JLabel[3];
     JPanel jPanel1;
+    JTable[] jTableScore;
 
     public ScoreScreen(java.awt.Frame parent, boolean modal, GridBoard grille) {
         initComponents();
@@ -55,7 +59,10 @@ public class ScoreScreen extends javax.swing.JFrame {
 //        /*gLayout = new GridLayout(10, 3);
 //         jPanel1.setLayout(gLayout);
 //         jPanel1.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);*/
+
         afficherScore(grille);
+
+
     }
 
     /**
@@ -82,63 +89,74 @@ public class ScoreScreen extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
+
     private void afficherScore(GridBoard grille) {
+        
         Map<String, List<Score>> allScore = grille.getAllScore();
-        int i = 0;
+        int tab = 0;
         for (Map.Entry<String, List<Score>> entrySet : allScore.entrySet()) {
             String key = entrySet.getKey();
             List<Score> listNiveau = entrySet.getValue();
+            int i = 1;
             for (Score score : listNiveau) {
-                playerName[i] = new JLabel();
-                playerScore[i] = new JLabel();
-                playerName[i].setText(score.getName());
-                System.out.println(""+score.getName());
-                //playerName[i].setHorizontalAlignment(SwingConstants.LEFT);
+                DefaultTableModel tableModel = (DefaultTableModel) jTableScore[tab].getModel();
+                String[] row = new String[3];
                 DateFormat formatter = new SimpleDateFormat("mm:ss");
-                playerScore[i].setText((formatter.format(score.getScore())));
-                GridBagConstraints gbc = new GridBagConstraints();
-                gbc.gridheight=1;
-                
-                gbc.ipady=10;
-                gbc.ipadx=10;
-                gbc.gridy =2*i;
-                gbc.gridx = 0;
-                gbc.anchor = GridBagConstraints.NORTH;
-                 GridBagConstraints gbc2 = new GridBagConstraints();
-               gbc2.gridheight=1;
-               gbc2.anchor = GridBagConstraints.NORTH;
-                gbc2.gridy =2*i;
-                gbc2.gridx = 1;
-                ongletsPanel[score.getNiveau() - 1].add(playerName[i], gbc);
-                
-                ongletsPanel[score.getNiveau() - 1].add(playerScore[i], gbc2);
-                
-                System.out.println("Dim panel : "+ongletsPanel[score.getNiveau() - 1].getSize());
-                System.out.println("player label : "+playerName[i].getSize());
+                row[0] = "" + i;
+                row[1] = score.getName();
+                row[2] = formatter.format(score.getScore());
+                tableModel.addRow(row);
                 i++;
             }
+            tab++;
         }
-
     }
 
-    private void initializeComponents() {
+private void initializeComponents() {
         this.setLayout(new GridLayout());
         jPanel1 = new JPanel();
-        
+        jTableScore = new JTable[3];
         onglets = new JTabbedPane();
         onglets.setSize(new Dimension(1000, 1000));
         titreOnglet[0] = new JLabel("Score Facile");
         titreOnglet[1] = new JLabel("Score Moyen");
         titreOnglet[2] = new JLabel("Score Difficile");
         for (int i = 0; i < 3; i++) {
-            ongletsPanel[i] = new JPanel(new GridBagLayout());
-            
+            ongletsPanel[i] = new JPanel();
             ongletsPanel[i].setPreferredSize(new Dimension(300, 200));
             onglets.addTab(titreOnglet[i].getText(), ongletsPanel[i]);
+            jTableScore[i] = new javax.swing.JTable();
+            jTableScore[i].setModel(new javax.swing.table.DefaultTableModel(
+                    new Object[][]{},
+                    new String[]{
+                        "Rang", "Nom", "Score"
+                    }) {
+                Class[] types = new Class[]{
+                    java.lang.String.class, java.lang.String.class, java.lang.Integer.class  
+        };
+        boolean[] canEdit = new boolean[]{
+            false, false, false
+        };
+
+        public Class getColumnClass(int columnIndex) {
+            return types[columnIndex];
+        }
+
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return canEdit[columnIndex];
+        }
+    }
+    );
+            jTableScore[i].setGridColor(
+    new java.awt.Color(255, 255, 255));
+            jTableScore[i].getTableHeader().setReorderingAllowed(false);
+            jTableScore[i].getColumnModel().getColumn(0).setResizable(false);
+            jTableScore[i].getColumnModel().getColumn(0).setPreferredWidth(30);
+            jTableScore[i].getColumnModel().getColumn(1).setResizable(false);
+            jTableScore[i].getColumnModel().getColumn(2).setResizable(false);
+            ongletsPanel[i].add(jTableScore[i]);
         }
         jPanel1.add(onglets);
         this.getContentPane().add(jPanel1);
