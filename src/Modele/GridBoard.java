@@ -58,15 +58,15 @@ public class GridBoard extends Observable implements Serializable {
         if (niveau == 1) {
             height = 9;
             lenght = 9;
-            NB_BOMBES = 10;
+            NB_BOMBES = 1;
         } else if (niveau == 2) {
             height = 16;
             lenght = 16;
-            NB_BOMBES = 40;
+            NB_BOMBES = 4;
         } else {
             height = 30;
             lenght = 16;
-            NB_BOMBES = 99;
+            NB_BOMBES = 9;
         }
         
         initGrille();
@@ -305,9 +305,9 @@ public class GridBoard extends Observable implements Serializable {
         } else {
             allScore = new HashMap<String, List<Score>>();
         }
-        if (isBetterScore(newScore, scores)) {
+       
             if (scores != null) {
-                if (scores.size() == 10) {
+                if (scores.size() == 10 && isBetterScore(newScore, scores)) {
                     scores.remove(9);
                 }
                 scores.add(newScore);
@@ -327,7 +327,7 @@ public class GridBoard extends Observable implements Serializable {
                 i.printStackTrace();
             }
 
-        }
+        
     }
 
     private boolean isBetterScore(Score newScore, List<Score> listScore) {

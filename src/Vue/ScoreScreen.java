@@ -8,9 +8,11 @@ package Vue;
 import Modele.GridBoard;
 import Modele.Score;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.text.DateFormat;
@@ -22,6 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 /**
  *
@@ -42,7 +45,7 @@ public class ScoreScreen extends javax.swing.JFrame {
 
     public ScoreScreen(java.awt.Frame parent, boolean modal, GridBoard grille) {
         initComponents();
-        initializaComponents();
+        initializeComponents();
         //if (grille.getEtatPartie() == grille.PARTIE_GAGNE) {
 //        String name = JOptionPane.showInputDialog("Votre nom: ");
 //        grille.sauvegarder(name);
@@ -93,28 +96,48 @@ public class ScoreScreen extends javax.swing.JFrame {
                 playerName[i] = new JLabel();
                 playerScore[i] = new JLabel();
                 playerName[i].setText(score.getName());
+                System.out.println(""+score.getName());
                 //playerName[i].setHorizontalAlignment(SwingConstants.LEFT);
                 DateFormat formatter = new SimpleDateFormat("mm:ss");
-                playerScore[i].setText(String.valueOf(formatter.format(score.getScore())));
-
-                ongletsPanel[score.getNiveau() - 1].add(playerName[i]);
-                ongletsPanel[score.getNiveau() - 1].add(playerScore[i]);
+                playerScore[i].setText((formatter.format(score.getScore())));
+                GridBagConstraints gbc = new GridBagConstraints();
+                gbc.gridheight=1;
+                
+                gbc.ipady=10;
+                gbc.ipadx=10;
+                gbc.gridy =2*i;
+                gbc.gridx = 0;
+                gbc.anchor = GridBagConstraints.NORTH;
+                 GridBagConstraints gbc2 = new GridBagConstraints();
+               gbc2.gridheight=1;
+               gbc2.anchor = GridBagConstraints.NORTH;
+                gbc2.gridy =2*i;
+                gbc2.gridx = 1;
+                ongletsPanel[score.getNiveau() - 1].add(playerName[i], gbc);
+                
+                ongletsPanel[score.getNiveau() - 1].add(playerScore[i], gbc2);
+                
+                System.out.println("Dim panel : "+ongletsPanel[score.getNiveau() - 1].getSize());
+                System.out.println("player label : "+playerName[i].getSize());
                 i++;
             }
         }
 
     }
 
-    private void initializaComponents() {
+    private void initializeComponents() {
         this.setLayout(new GridLayout());
         jPanel1 = new JPanel();
+        
         onglets = new JTabbedPane();
+        onglets.setSize(new Dimension(1000, 1000));
         titreOnglet[0] = new JLabel("Score Facile");
         titreOnglet[1] = new JLabel("Score Moyen");
         titreOnglet[2] = new JLabel("Score Difficile");
         for (int i = 0; i < 3; i++) {
-            ongletsPanel[i] = new JPanel(new GridLayout(0, 2));
-            ongletsPanel[i].setPreferredSize(new Dimension(300, 50));
+            ongletsPanel[i] = new JPanel(new GridBagLayout());
+            
+            ongletsPanel[i].setPreferredSize(new Dimension(300, 200));
             onglets.addTab(titreOnglet[i].getText(), ongletsPanel[i]);
         }
         jPanel1.add(onglets);
