@@ -84,7 +84,7 @@ public class Case {
             if (this.value == 0) {
                 this.status = CASE_INUTILE;
                 grille.incrementCptUsedCase();
-                listePropagationVoisins = grille.getVoisinsDePropagation(this);
+                listePropagationVoisins = grille.getVoisins(this);
                 for (Case propagationCase : listePropagationVoisins) {
                     if (propagationCase.getStatus() != CASE_INUTILE && propagationCase.getStatus() != CASE_DRAPEAU) {
                         propagationCase.propagerCase();
