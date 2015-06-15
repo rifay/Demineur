@@ -14,6 +14,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,20 +34,19 @@ public class GridBoard extends Observable implements Serializable {
     public final int PARTIE_EN_COURS = 0;
     public final int GAME_OVER = -1;
     public final int PARTIE_GAGNE = 1;
-
+    public final int NB_BOMBES;
     Case[][] grille;
     int lenght;
     int height;
     Map<Object, Point> coordonnesMap;
     long tempsDebut;
     long tempsActuel;
-    int nbBombes;
+    int nbFlagLeft;
     int nbCases;
     int cptUsedCase;
     int etatPartie;
     Thread chronoThread;
     Map<String, List<Score>> allScore;
-
     List<Score> facileScore = null;
     List<Score> moyenScore = null;
     List<Score> difficileScore = null;
@@ -56,16 +58,17 @@ public class GridBoard extends Observable implements Serializable {
         if (niveau == 1) {
             height = 9;
             lenght = 9;
-            nbBombes = 10;
+            NB_BOMBES = 10;
         } else if (niveau == 2) {
             height = 16;
             lenght = 16;
-            nbBombes = 40;
-        } else if (niveau == 3) {
+            NB_BOMBES = 40;
+        } else {
             height = 30;
             lenght = 16;
-            nbBombes = 99;
+            NB_BOMBES = 99;
         }
+        
         initGrille();
     }
 
@@ -79,6 +82,7 @@ public class GridBoard extends Observable implements Serializable {
 
     public void initGrille() {
         cptUsedCase = 0;
+        nbFlagLeft = NB_BOMBES;
         coordonnesMap = new HashMap<Object, Point>();
         tempsDebut = System.currentTimeMillis();
         startChrono();
@@ -93,7 +97,7 @@ public class GridBoard extends Observable implements Serializable {
         }
         nbCases = this.lenght * this.height;
         int i = 0;
-        while (i < nbBombes) {
+        while (i < nbFlagLeft) {
             Random rnd = new Random();
             int x = rnd.nextInt(lenght);
             int y = rnd.nextInt(height);
@@ -107,20 +111,23 @@ public class GridBoard extends Observable implements Serializable {
     }
 
     public void updateValue(int x, int y) {
-        int process = grille[x][y].checkCase();
-
-        if (process == -1) {
-            etatPartie = GAME_OVER;
-            stopChrono();
-        } else if (getNbCases() - getCptUsedCase() < getNbBombes()) {
-            System.out.println("Gagné !");
-            etatPartie = PARTIE_GAGNE;
-            stopChrono();
-        } else if (process == 0) {
-            etatPartie = PARTIE_EN_COURS;
+        if (grille[x][y].getStatus() == Case.CASE_NOUVELLE) {
+            int process = grille[x][y].checkCase();
+            if (process == -1) {
+                etatPartie = GAME_OVER;
+                stopChrono();
+            } else if (getNbCases() - getCptUsedCase() <= NB_BOMBES) {
+                System.out.println("Gagné !");
+                etatPartie = PARTIE_GAGNE;
+                stopChrono();
+            } else if (process == 0) {
+                etatPartie = PARTIE_EN_COURS;
+            }
+            setChanged();
+            notifyObservers();
         }
-        setChanged();
-        notifyObservers();
+
+
     }
 
     public void stopChrono() {
@@ -184,10 +191,10 @@ public class GridBoard extends Observable implements Serializable {
     public void updateFlag(int x, int y) {
         if (grille[x][y].getStatus() == Case.CASE_NOUVELLE) {
             grille[x][y].setStatus(Case.CASE_DRAPEAU);
-            this.nbBombes = nbBombes - 1;
+            this.nbFlagLeft = nbFlagLeft - 1;
         } else if (grille[x][y].getStatus() == Case.CASE_DRAPEAU) {
             grille[x][y].setStatus(Case.CASE_INTERROGATIVE);
-            this.nbBombes = nbBombes + 1;
+            this.nbFlagLeft = nbFlagLeft + 1;
         } else if (grille[x][y].getStatus() == Case.CASE_INTERROGATIVE) {
             grille[x][y].setStatus(Case.CASE_NOUVELLE);
         }
@@ -197,9 +204,9 @@ public class GridBoard extends Observable implements Serializable {
 
     public boolean incrementTime() {
         tempsActuel = System.currentTimeMillis() - tempsDebut;
-        if (tempsActuel >= 120000) {
-            return false;
-        }
+        /*if (tempsActuel >= 120000) {
+         return false;
+         }*/
         setChanged();
         notifyObservers();
         return true;
@@ -212,10 +219,9 @@ public class GridBoard extends Observable implements Serializable {
     public Map<String, List<Score>> getAllScore() {
         return allScore;
     }
-    
+
     public void startChrono() {
         chronoThread = new Thread(new Runnable() {
-
             @Override
             public void run() {
                 boolean process = true;
@@ -236,14 +242,19 @@ public class GridBoard extends Observable implements Serializable {
         this.nbCases = nbCases;
     }
 
-    public int getNbBombes() {
-        return nbBombes;
+    public int getNbFlagLeft() {
+        return nbFlagLeft;
     }
 
-    public void setNbBombes(int nbBombes) {
-        this.nbBombes = nbBombes;
+    public void setNbFlagLeft(int nbFlagLeft) {
+        this.nbFlagLeft = nbFlagLeft;
     }
 
+    /**
+     * Nombre de case visibles
+     *
+     * @return
+     */
     public int getCptUsedCase() {
         return cptUsedCase;
     }
@@ -259,7 +270,6 @@ public class GridBoard extends Observable implements Serializable {
 //    public List<Score> getAllScores() {
 //        return allScores;
 //    }
-
     public int getEtatPartie() {
         return etatPartie;
     }
@@ -290,18 +300,18 @@ public class GridBoard extends Observable implements Serializable {
     public void sauvegarder(String name) {
         Score newScore = new Score(name, getTimeActuel(), niveau);
         List<Score> scores = null;
-        if (allScore !=null){
+        if (allScore != null) {
             scores = allScore.get(String.valueOf(niveau));
-        }else{
+        } else {
             allScore = new HashMap<String, List<Score>>();
         }
-        if (isBetterScore(newScore,scores)) {
+        if (isBetterScore(newScore, scores)) {
             if (scores != null) {
                 if (scores.size() == 10) {
                     scores.remove(9);
                 }
                 scores.add(newScore);
-                scores.sort(null);
+                Collections.sort(scores);
             } else {
                 scores = new ArrayList<>();
                 scores.add(newScore);
@@ -321,32 +331,31 @@ public class GridBoard extends Observable implements Serializable {
     }
 
     private boolean isBetterScore(Score newScore, List<Score> listScore) {
-        boolean existingLevel=false;
+        boolean existingLevel = false;
         if (listScore != null) {
             for (Score score : listScore) {
                 if (score.getNiveau() == newScore.getNiveau()) {
-                    existingLevel=true;
+                    existingLevel = true;
                     if (score.compareTo(newScore) > 0) {
                         return true;
                     }
                 }
             }
-            if (!existingLevel){
+            if (!existingLevel) {
                 return true; //On a pas de score enregistré pour ce niveau, donc il faut enregistrer
-            }else{
+            } else {
                 return false;
             }
-            
+
         }
         return true;
     }
 
     private void remplirList() {
         for (Map.Entry<Object, Point> entrySet : coordonnesMap.entrySet()) {
-                Object key = entrySet.getKey();
-                Point value = entrySet.getValue();
-                
-            }
-    }
+            Object key = entrySet.getKey();
+            Point value = entrySet.getValue();
 
+        }
+    }
 }

@@ -66,7 +66,7 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                 gridButton[i][j].setText(Integer.toString(grille.getGrille()[i][j].getValue()));
                 gridButton[i][j].addMouseListener(new MouseAdapter() {
                     @Override
-                    public void mouseClicked(MouseEvent e) {
+                    public void mousePressed(MouseEvent e) {
                         if (e.getModifiers() == MouseEvent.BUTTON3_MASK) {
                             rightClicCase(x, y);
                         } else if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
@@ -113,6 +113,7 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
 
         jPanel_Haut = new javax.swing.JPanel();
         jLabel_chrono = new javax.swing.JLabel();
+        jlabelBombLeft = new javax.swing.JLabel();
         jPanel_Principal = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu_Fichier = new javax.swing.JMenu();
@@ -120,23 +121,33 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jLabel_chrono.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel_chrono.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/clock.png"))); // NOI18N
+        jLabel_chrono.setText("10min00");
+
+        jlabelBombLeft.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jlabelBombLeft.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/mine.png"))); // NOI18N
+        jlabelBombLeft.setText("1000");
 
         javax.swing.GroupLayout jPanel_HautLayout = new javax.swing.GroupLayout(jPanel_Haut);
         jPanel_Haut.setLayout(jPanel_HautLayout);
         jPanel_HautLayout.setHorizontalGroup(
             jPanel_HautLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel_HautLayout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addComponent(jLabel_chrono)
-                .addContainerGap(248, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_HautLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jlabelBombLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
+                .addComponent(jLabel_chrono, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36))
         );
         jPanel_HautLayout.setVerticalGroup(
             jPanel_HautLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_HautLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(jLabel_chrono)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(jPanel_HautLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jlabelBombLeft, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel_chrono, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jLabel_chrono.getAccessibleContext().setAccessibleName("jLabel_chrono");
@@ -172,19 +183,21 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel_Principal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel_Haut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(107, Short.MAX_VALUE))
+                .addComponent(jPanel_Principal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(47, Short.MAX_VALUE)
+                .addComponent(jPanel_Haut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addGap(24, 24, 24)
                 .addComponent(jPanel_Haut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel_Principal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         pack();
@@ -237,6 +250,7 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
     private javax.swing.JMenu jMenu_Fichier;
     private javax.swing.JPanel jPanel_Haut;
     private javax.swing.JPanel jPanel_Principal;
+    private javax.swing.JLabel jlabelBombLeft;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -244,6 +258,7 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
         GridBoard tempGrid = (GridBoard) o;
         DateFormat formatter = new SimpleDateFormat("mm:ss");
         jLabel_chrono.setText(formatter.format(tempGrid.getTimeActuel()));
+        jlabelBombLeft.setText(""+tempGrid.getNbFlagLeft());
         if (tempGrid.getEtatPartie() == tempGrid.PARTIE_EN_COURS) {
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < lenght; j++) {
