@@ -62,7 +62,6 @@ public class ScoreScreen extends javax.swing.JFrame {
 
         afficherScore(grille);
 
-
     }
 
     /**
@@ -93,28 +92,30 @@ public class ScoreScreen extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void afficherScore(GridBoard grille) {
-        
+
         Map<String, List<Score>> allScore = grille.getAllScore();
         int tab = 0;
-        for (Map.Entry<String, List<Score>> entrySet : allScore.entrySet()) {
-            String key = entrySet.getKey();
-            List<Score> listNiveau = entrySet.getValue();
-            int i = 1;
-            for (Score score : listNiveau) {
-                DefaultTableModel tableModel = (DefaultTableModel) jTableScore[tab].getModel();
-                String[] row = new String[3];
-                DateFormat formatter = new SimpleDateFormat("mm:ss");
-                row[0] = "" + i;
-                row[1] = score.getName();
-                row[2] = formatter.format(score.getScore());
-                tableModel.addRow(row);
-                i++;
+        if (allScore != null) {
+            for (Map.Entry<String, List<Score>> entrySet : allScore.entrySet()) {
+                String key = entrySet.getKey();
+                List<Score> listNiveau = entrySet.getValue();
+                int i = 1;
+                for (Score score : listNiveau) {
+                    DefaultTableModel tableModel = (DefaultTableModel) jTableScore[tab].getModel();
+                    String[] row = new String[3];
+                    DateFormat formatter = new SimpleDateFormat("mm:ss");
+                    row[0] = "" + i;
+                    row[1] = score.getName();
+                    row[2] = formatter.format(score.getScore());
+                    tableModel.addRow(row);
+                    i++;
+                }
+                tab++;
             }
-            tab++;
         }
     }
 
-private void initializeComponents() {
+    private void initializeComponents() {
         this.setLayout(new GridLayout());
         jPanel1 = new JPanel();
         jTableScore = new JTable[3];
@@ -133,24 +134,24 @@ private void initializeComponents() {
                     new String[]{
                         "Rang", "Nom", "Score"
                     }) {
-                Class[] types = new Class[]{
-                    java.lang.String.class, java.lang.String.class, java.lang.Integer.class  
-        };
-        boolean[] canEdit = new boolean[]{
-            false, false, false
-        };
+                        Class[] types = new Class[]{
+                            java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+                        };
+                        boolean[] canEdit = new boolean[]{
+                            false, false, false
+                        };
 
-        public Class getColumnClass(int columnIndex) {
-            return types[columnIndex];
-        }
+                        public Class getColumnClass(int columnIndex) {
+                            return types[columnIndex];
+                        }
 
-        public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return canEdit[columnIndex];
-        }
-    }
-    );
+                        public boolean isCellEditable(int rowIndex, int columnIndex) {
+                            return canEdit[columnIndex];
+                        }
+                    }
+            );
             jTableScore[i].setGridColor(
-    new java.awt.Color(255, 255, 255));
+                    new java.awt.Color(255, 255, 255));
             jTableScore[i].getTableHeader().setReorderingAllowed(false);
             jTableScore[i].getColumnModel().getColumn(0).setResizable(false);
             jTableScore[i].getColumnModel().getColumn(0).setPreferredWidth(30);

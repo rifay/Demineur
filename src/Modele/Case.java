@@ -23,6 +23,7 @@ public class Case {
     private int status;
     private boolean bombe;
     private GridBoard grille;
+    private int numPlayer=0;
 
     public Case(GridBoard grille) {
         this.status = CASE_NOUVELLE;

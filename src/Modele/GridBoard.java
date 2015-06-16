@@ -283,13 +283,15 @@ public class GridBoard extends Observable implements Serializable {
 
     public Map<String, List<Score>> chargerScore() {
         try {
-            FileInputStream fileIn = new FileInputStream("score.ser");
+            File scoreFichier = new File("score.ser");
+            FileInputStream fileIn = new FileInputStream(scoreFichier);
             ObjectInputStream in = new ObjectInputStream(fileIn);
             allScore = (Map<String, List<Score>>) in.readObject();
             in.close();
             fileIn.close();
         } catch (IOException i) {
-            i.printStackTrace();
+            //i.printStackTrace();
+            System.err.println("Pas de sauvegarde retrouvée !");
             return null;
         } catch (ClassNotFoundException c) {
             System.out.println("Score class not found");
@@ -310,8 +312,11 @@ public class GridBoard extends Observable implements Serializable {
         }
        
             if (scores != null) {
-                if (scores.size() == 10 && isBetterScore(newScore, scores)) {
-                    scores.remove(9);
+                if (scores.size() >= 10 && isBetterScore(newScore, scores)) {
+                    for (int i=9;i<scores.size();i++){
+                        scores.remove(i);
+                    }
+                    //scores.remove(9);
                 }
                 scores.add(newScore);
                 Collections.sort(scores);
