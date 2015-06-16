@@ -6,6 +6,7 @@
 package Vue;
 
 import Modele.Case;
+import Modele.CaseReseau;
 import Modele.GridBoard;
 import Modele.GridBoardReseau;
 import java.awt.Color;
@@ -56,20 +57,20 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
 
     public FenetreReseau(int niveauPartie) {
         initComponents();
-       
-        
+
+
         switch (niveauPartie) {
             case GridBoard.LVL_FACILE:
-                setSize(450,300);
+                setSize(450, 300);
                 break;
             case GridBoard.LVL_MOYEN:
-                setSize(450,450);
+                setSize(450, 450);
                 break;
             case GridBoard.LVL_DIFFICILE:
-                setSize(600,450);
+                setSize(600, 450);
                 break;
         }
-        grille = new GridBoardReseau(niveauPartie);
+        grille = new GridBoardReseau(niveauPartie, GridBoardReseau.CLIENT);
         height = grille.getHeight();
         lenght = grille.getLenght();
         gridButton = new JButton[height][lenght];
@@ -115,14 +116,14 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
     private void leftClicCase(int x, int y) {
 
         if (gridButton[x][y].isEnabled()) {
-            grille.updateAll(x, y);
+            grille.updateAll(x, y, GridBoardReseau.ACTION_LEFT);
         }
     }
 
     private void rightClicCase(int x, int y) {
 
         if (gridButton[x][y].isEnabled()) {
-            grille.updateFlag(x, y);
+            grille.updateAll(x, y, GridBoardReseau.ACTION_RIGHT);
         }
     }
 
@@ -282,35 +283,42 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
         DateFormat formatter = new SimpleDateFormat("mm:ss");
         jLabel_chrono.setText(formatter.format(tempGrid.getTimeActuel()));
         jlabelBombLeft.setText("" + tempGrid.getNbFlagLeft());
-        
-            for (int i = 0; i < height; i++) {
-                for (int j = 0; j < lenght; j++) {
-                    Case tempCase = tempGrid.getGrille()[i][j];
-                    if (tempCase.getStatus() == Case.CASE_AFFICHER) {
-                        gridButton[i][j].setText(colorInt(tempCase.getValue()));
-                        //gridButton[i][j].setEnabled(false);
-                        gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-                    } else if (tempCase.getStatus() == Case.CASE_INUTILE) {
-                       // gridButton[i][j].setEnabled(false);
-                        gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
-                        gridButton[i][j].setIcon(null);
-                        gridButton[i][j].setText("");
-                    } else if (tempCase.getStatus() == Case.CASE_DRAPEAU) {
-                        gridButton[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/flag.png")));
-                        gridButton[i][j].setText("");
-                    } else if (tempCase.getStatus() == Case.CASE_INTERROGATIVE) {
-                        gridButton[i][j].setIcon(null);
-                        gridButton[i][j].setText("?");
-                    } else if (tempCase.getStatus() == Case.CASE_NOUVELLE) {
-                        gridButton[i][j].setIcon(null);
-                        gridButton[i][j].setText("");
-                        gridButton[i][j].setEnabled(true);
-                        gridButton[i][j].setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < lenght; j++) {
+                CaseReseau tempCase = (CaseReseau) tempGrid.getGrille()[i][j];
+                if (tempCase.getStatus() == Case.CASE_AFFICHER) {
+                    gridButton[i][j].setText(colorInt(tempCase.getValue()));
+                    //gridButton[i][j].setEnabled(false);
+                    gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+                } else if (tempCase.getStatus() == Case.CASE_INUTILE) {
+                    // gridButton[i][j].setEnabled(false);
+                    gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
+                    gridButton[i][j].setIcon(null);
+                    gridButton[i][j].setText("<html><span style=\"font-weight:bold;\"></span></html>");
+                } else if (tempCase.getStatus() == Case.CASE_DRAPEAU) {
+                    String image;
+                    if (tempCase.getNumeroPlayer() == CaseReseau.PLAYER_OTHER) {
+                        image = "/Assets/flag2.png";
+                    } else {
+                        image = "/Assets/flag.png";
                     }
+                    gridButton[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource(image)));
+                    gridButton[i][j].setText("<html><span style=\"font-weight:bold;\"></span></html>");
+
+                } else if (tempCase.getStatus() == Case.CASE_INTERROGATIVE) {
+                    gridButton[i][j].setIcon(null);
+                    gridButton[i][j].setText("?");
+                } else if (tempCase.getStatus() == Case.CASE_NOUVELLE) {
+                    gridButton[i][j].setIcon(null);
+                    gridButton[i][j].setText("<html><span style=\"font-weight:bold;\"></span></html>");
+                    gridButton[i][j].setEnabled(true);
+                    gridButton[i][j].setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
                 }
             }
-       if (tempGrid.getEtatPartie() != tempGrid.PARTIE_EN_COURS) {
+        }
+        if (tempGrid.getEtatPartie() != tempGrid.PARTIE_EN_COURS) {
             //L'utilisateur a perdu ou gagné
             afficherGrilleFinale(grille.getEtatPartie());
             Object[] options = new Object[2];
@@ -361,22 +369,20 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
                         gridButton[i][j].setText("");
                     }
                 } else if (grille.getGrille()[i][j].getBombe()) {
-                    if (grille.getGrille()[i][j].getStatus()==Case.CASE_AFFICHER)
-                    {
+                    if (grille.getGrille()[i][j].getStatus() == Case.CASE_AFFICHER) {
                         gridButton[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/bombExplosed.png")));
                         gridButton[i][j].setText("");
-                    }else 
-                    {
+                    } else {
                         gridButton[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/bomb.png")));
                         gridButton[i][j].setText("");
                     }
-                    
-                }else if (grille.getGrille()[i][j].getStatus() == Case.CASE_AFFICHER) {
-                        gridButton[i][j].setText(colorInt(grille.getGrille()[i][j].getValue()));
-                        
-                        gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-                   
+                } else if (grille.getGrille()[i][j].getStatus() == Case.CASE_AFFICHER) {
+                    gridButton[i][j].setText(colorInt(grille.getGrille()[i][j].getValue()));
+
+                    gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+
                 }
                 //gridButton[i][j].setEnabled(false);
             }
@@ -388,9 +394,9 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
     }
 
     private String colorInt(int value) {
-       String color="";
-        switch(value){
-            case 1: 
+        String color = "";
+        switch (value) {
+            case 1:
                 color = "0000FF";
                 break;
             case 2:
@@ -408,9 +414,8 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
             default:
                 color = "008284";
                 break;
-                
-        }
-       return "<html><span style=\"font-weight:bold; color:#"+color+";\">"+value+"</span></html>";
-    }
 
+        }
+        return "<html><span style=\"font-weight:bold; color:#" + color + ";\">" + value + "</span></html>";
+    }
 }

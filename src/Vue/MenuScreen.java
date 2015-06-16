@@ -141,7 +141,7 @@ public class MenuScreen extends javax.swing.JDialog {
                     JOptionPane.ERROR_MESSAGE);
         } else {
             dispose();
-            new FenetrePrincipale(niveauPartie).setVisible(true);
+            new FenetreReseau(niveauPartie).setVisible(true);
         }
 
 

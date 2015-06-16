@@ -5,16 +5,7 @@
  */
 package Modele;
 
-import Vue.FenetreReseau;
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.awt.Point;
 
 /**
  *
@@ -22,54 +13,108 @@ import java.util.logging.Logger;
  */
 public class GridBoardReseau extends GridBoard {
 
-    private final int PORT_NUMBER = 2525;
-    private final int longueurMax = 8;
-    private InetAddress adresseIP_adversaire;
-    private DatagramSocket ds;
+    public static final int SERVEUR = 0;
+    public static final int CLIENT = 1;
+    public static final int ACTION_LEFT = 1;
+    public static final int ACTION_RIGHT = 2;
+    ObjetConnecte connexion;
 
-    public GridBoardReseau(int niveauPartie) {
-        super(niveauPartie);
-        try {
-            ds = new DatagramSocket(PORT_NUMBER);
-        } catch (SocketException ex) {
-            Logger.getLogger(FenetreReseau.class.getName()).log(Level.SEVERE, null, ex);
+    public GridBoardReseau(int niveauPartie, int typeConnexion) {
+        super();
+        if (typeConnexion == CLIENT) {
+            connexion = new Client();
+        } else {
+            connexion = new Serveur();
         }
-
-        Thread listener = new Thread(new Runnable() {
-
+        niveau = niveauPartie;
+        if (niveau == LVL_FACILE) {
+            height = 9;
+            lenght = 9;
+            NB_BOMBES = 10;
+        } else if (niveau == LVL_MOYEN) {
+            height = 16;
+            lenght = 16;
+            NB_BOMBES = 40;
+        } else {
+            height = 30;
+            lenght = 16;
+            NB_BOMBES = 99;
+        }
+        grille = new CaseReseau[height][lenght];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < lenght; j++) {
+                grille[i][j] = new CaseReseau(this);
+                coordonnesMap.put(grille[i][j], new Point(j, i));
+            }
+        }
+        nbCases = this.lenght * this.height;
+        initGrille();
+        connexion.startGame((CaseReseau[][])grille);
+        //Listener du clique droit
+        Thread listenerRight = new Thread(new Runnable() {
             @Override
             public void run() {
-                byte[] buffer = new byte[longueurMax];
-                DatagramPacket dp = new DatagramPacket(buffer, longueurMax);
-                try {
-                    ds.receive(dp);
-                } catch (IOException ex) {
-                    System.err.println(ex);
+                while (true) {
+                    int coord[] = connexion.receiveNextCoordonnees(ACTION_RIGHT);
+                    //Si la partie est en cours
+                    if (etatPartie == PARTIE_EN_COURS) {
+                        //On met a jour la grille
+                        updateFlagOther(coord[0], coord[1]);
+                        //Si la partie est perdu suite à l'action de l'adversaire :
+                        if (etatPartie == GAME_OVER) {
+                            //On gagne la partie !
+                            etatPartie = PARTIE_GAGNE;
+                        } else if (etatPartie == PARTIE_GAGNE) //Si la partie est gagnée suite à l'action de l'adversaire :
+                        {
+                            //On perd la partie ! :'(
+                            etatPartie = GAME_OVER;
+                        }
+                    }
                 }
-                byte[] data = dp.getData();
-                int x = Integer.valueOf(new String(Arrays.copyOfRange(data, 0, 4)));
-                int y = Integer.valueOf(new String(Arrays.copyOfRange(data, 4, 8)));
-                updateOther(x, y);
+
             }
         });
-        listener.start();
+        //Listener du clique gauche
+        Thread listenerLeft = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    int coord[] = connexion.receiveNextCoordonnees(ACTION_LEFT);
+                    //Si la partie est en cours
+                    if (etatPartie == PARTIE_EN_COURS) {
+                        //On met a jour la grille
+                        updateValue(coord[0], coord[1]);
+                        //Si la partie est perdu suite à l'action de l'adversaire :
+                        if (etatPartie == GAME_OVER) {
+                            //On gagne la partie !
+                            etatPartie = PARTIE_GAGNE;
+                        } else if (etatPartie == PARTIE_GAGNE) //Si la partie est gagnée suite à l'action de l'adversaire :
+                        {
+                            //On perd la partie ! :'(
+                            etatPartie = GAME_OVER;
+                        }
+                    }
+                }
+
+            }
+        });
+        listenerRight.start();
+        listenerLeft.start();
     }
 
-    public void updateAll(int x, int y) {
-        super.updateValue(x, y);
-        byte[] dataX = ByteBuffer.allocate(4).putInt(x).array();
-        byte[] dataY = ByteBuffer.allocate(4).putInt(y).array();
-        byte[] buffer = new byte[dataX.length + dataY.length];
-        System.arraycopy(dataX, 0, buffer, 0, dataX.length);
-        System.arraycopy(dataY, 0, buffer, dataY.length, dataY.length);
-        DatagramPacket dp = new DatagramPacket(buffer, buffer.length, adresseIP_adversaire, PORT_NUMBER);
-        try {
-            ds.send(dp);
-        } catch (IOException ex) {
-            Logger.getLogger(FenetreReseau.class.getName()).log(Level.SEVERE, null, ex);
+    public void updateAll(int x, int y, int action) {
+
+        connexion.sendCoordonnees(x, y, action);
+        if (action == ACTION_LEFT) {
+            super.updateValue(x, y);
+        } else if (action == ACTION_RIGHT) {
+            super.updateFlag(x, y);
         }
+
+
+
     }
-    
+
     public void updateOther(int x, int y) {
         if (grille[x][y].getStatus() == Case.CASE_NOUVELLE) {
             int process = grille[x][y].checkCase();
@@ -90,4 +135,12 @@ public class GridBoardReseau extends GridBoard {
 
     }
 
+    private void updateFlagOther(int x, int y) {
+
+
+        super.updateFlag(x, y);
+        ((CaseReseau) grille[x][y]).setNumeroPlayer(CaseReseau.PLAYER_OTHER);
+        setChanged();
+        notifyObservers();
+    }
 }

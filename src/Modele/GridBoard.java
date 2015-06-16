@@ -34,7 +34,7 @@ public class GridBoard extends Observable implements Serializable {
     public final int PARTIE_EN_COURS = 0;
     public final int GAME_OVER = -1;
     public final int PARTIE_GAGNE = 1;
-    public final int NB_BOMBES;
+    public int NB_BOMBES;
     static public final int LVL_FACILE=1;
     static public final int LVL_MOYEN=2;
     static public final int LVL_DIFFICILE=3;
@@ -55,8 +55,14 @@ public class GridBoard extends Observable implements Serializable {
     List<Score> difficileScore = null;
     int niveau;
 
-    public GridBoard(int niveauPartie) {
+    protected GridBoard()
+    {
         this.allScore = new HashMap<String, List<Score>>();
+        coordonnesMap = new HashMap<Object, Point>();
+    }
+    
+    public GridBoard(int niveauPartie) {
+        this();
         niveau = niveauPartie;
         if (niveau == LVL_FACILE) {
             height = 9;
@@ -71,7 +77,14 @@ public class GridBoard extends Observable implements Serializable {
             lenght = 16;
             NB_BOMBES = 99;
         }
-        
+        grille = new Case[height][lenght];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < lenght; j++) {
+                grille[i][j] = new Case(this);
+                coordonnesMap.put(grille[i][j], new Point(j, i));
+            }
+        }
+        nbCases = this.lenght * this.height;
         initGrille();
     }
 
@@ -86,19 +99,16 @@ public class GridBoard extends Observable implements Serializable {
     public void initGrille() {
         cptUsedCase = 0;
         nbFlagLeft = NB_BOMBES;
-        coordonnesMap = new HashMap<Object, Point>();
+        coordonnesMap.clear();
         tempsDebut = System.currentTimeMillis();
         startChrono();
-        grille = new Case[height][lenght];
         etatPartie = PARTIE_EN_COURS;
         allScore = chargerScore();
-        for (int i = 0; i < height; i++) {
+         for (int i = 0; i < height; i++) {
             for (int j = 0; j < lenght; j++) {
-                grille[i][j] = new Case(this);
-                coordonnesMap.put(grille[i][j], new Point(j, i));
+                grille[i][j].init();
             }
         }
-        nbCases = this.lenght * this.height;
         int i = 0;
         while (i < nbFlagLeft) {
             Random rnd = new Random();
@@ -113,7 +123,7 @@ public class GridBoard extends Observable implements Serializable {
         notifyObservers();
     }
 
-    public void updateValue(int x, int y) {
+    public synchronized void updateValue(int x, int y) {
         if (grille[x][y].getStatus() == Case.CASE_NOUVELLE) {
             int process = grille[x][y].checkCase();
             if (process == -1) {
@@ -366,4 +376,12 @@ public class GridBoard extends Observable implements Serializable {
 
         }
     }
+    
+    
+    public int getNiveau() {
+        return niveau;
+    }
+
+    
+    
 }

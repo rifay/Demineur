@@ -22,13 +22,13 @@ public class Case {
     private int value;
     private int status;
     private boolean bombe;
-    private GridBoard grille;
-    private int numPlayer=0;
+    public static GridBoard grille;
 
     public Case(GridBoard grille) {
         this.status = CASE_NOUVELLE;
         value = 0;
-        this.grille = grille;
+        bombe=false;
+        if (this.grille==null) this.grille = grille;
     }
 
     public boolean isBombe() {
@@ -59,6 +59,7 @@ public class Case {
         this.status = status;
     }
 
+    
     public int checkCase() {
         if (this.bombe) {
             //On vient cliqué sur une bombe, partie terminé
@@ -96,5 +97,11 @@ public class Case {
                 grille.incrementCptUsedCase();
             }
         }
+    }
+
+    void init() {
+         this.status = CASE_NOUVELLE;
+        value = 0;
+        bombe=false;
     }
 }
