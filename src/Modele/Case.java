@@ -32,7 +32,7 @@ public class Case implements Serializable{
         this.status = CASE_NOUVELLE;
         value = 0;
         bombe=false;
-        if (this.grille==null) this.grille = grille;
+        this.grille = grille;
     }
 
     public boolean isBombe() {

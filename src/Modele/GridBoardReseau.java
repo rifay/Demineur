@@ -24,10 +24,10 @@ public class GridBoardReseau extends GridBoard {
         if (typeConnexion == CLIENT) {
             connexion = new Client(this);
             connexion.startGame();
-            Case.grille=this;
+            Case.grille = this;
             initNiveau();
             initEnvironnement();
-            nbCases=height*lenght;
+            nbCases = height * lenght;
         } else {
             connexion = new Serveur(this);
             niveau = niveauPartie;
@@ -42,14 +42,14 @@ public class GridBoardReseau extends GridBoard {
             initGrille();
             connexion.startGame();
         }
-        
+
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < lenght; j++) {
                 coordonnesMap.put(grille[i][j], new Point(j, i));
             }
         }
-       
-        
+
+
         //Listener du clique droit
         Thread listenerRight = new Thread(new Runnable() {
             @Override
@@ -70,6 +70,8 @@ public class GridBoardReseau extends GridBoard {
                             etatPartie = GAME_OVER;
                         }
                     }
+                    setChanged();
+                    notifyObservers();
                 }
 
             }
@@ -94,6 +96,8 @@ public class GridBoardReseau extends GridBoard {
                             etatPartie = GAME_OVER;
                         }
                     }
+                    setChanged();
+                    notifyObservers();
                 }
 
             }
@@ -106,11 +110,12 @@ public class GridBoardReseau extends GridBoard {
 
         connexion.sendCoordonnees(x, y, action);
         if (action == ACTION_LEFT) {
-            super.updateValue(x, y);
+            updateValue(x, y);
         } else if (action == ACTION_RIGHT) {
-            super.updateFlag(x, y);
+            updateFlag(x, y);
         }
-
+          setChanged();
+            notifyObservers();
 
 
     }
@@ -138,16 +143,16 @@ public class GridBoardReseau extends GridBoard {
     private void updateFlagOther(int x, int y) {
 
 
-        super.updateFlag(x, y);
+        updateFlag(x, y);
         ((CaseReseau) grille[x][y]).setNumeroPlayer(CaseReseau.PLAYER_OTHER);
         setChanged();
         notifyObservers();
     }
 
     void setGrille(CaseReseau[][] grille) {
-        this.grille=grille;
+        this.grille = grille;
     }
-    
+
     CaseReseau[][] setGrille() {
         return (CaseReseau[][]) grille;
     }
@@ -158,19 +163,53 @@ public class GridBoardReseau extends GridBoard {
 
     private void initNiveau() {
         if (niveau == LVL_FACILE) {
-                height = 9;
-                lenght = 9;
-                NB_BOMBES = 10;
-            } else if (niveau == LVL_MOYEN) {
-                height = 16;
-                lenght = 16;
-                NB_BOMBES = 40;
-            } else {
-                height = 30;
-                lenght = 16;
-                NB_BOMBES = 99;
+            height = 9;
+            lenght = 9;
+            NB_BOMBES = 10;
+        } else if (niveau == LVL_MOYEN) {
+            height = 16;
+            lenght = 16;
+            NB_BOMBES = 40;
+        } else {
+            height = 30;
+            lenght = 16;
+            NB_BOMBES = 99;
+        }
+
+        nbCases = this.lenght * this.height;
+    }
+
+    @Override
+    public synchronized void updateValue(int x, int y) {
+        if (grille[x][y].getStatus() == Case.CASE_NOUVELLE) {
+            int process = grille[x][y].checkCase();
+            if (process == -1) {
+                etatPartie = GAME_OVER;
+                stopChrono();
+            } else if (getNbCases() - getCptUsedCase() <= NB_BOMBES) {
+                System.out.println("Gagné !");
+                etatPartie = PARTIE_GAGNE;
+                stopChrono();
+            } else if (process == 0) {
+                etatPartie = PARTIE_EN_COURS;
             }
-           
-            nbCases = this.lenght * this.height;
+
+        }
+
+
+    }
+    
+    
+    @Override
+     public void updateFlag(int x, int y) {
+        if (grille[x][y].getStatus() == Case.CASE_NOUVELLE) {
+            grille[x][y].setStatus(Case.CASE_DRAPEAU);
+            this.nbFlagLeft = nbFlagLeft - 1;
+        } else if (grille[x][y].getStatus() == Case.CASE_DRAPEAU) {
+            grille[x][y].setStatus(Case.CASE_INTERROGATIVE);
+            this.nbFlagLeft = nbFlagLeft + 1;
+        } else if (grille[x][y].getStatus() == Case.CASE_INTERROGATIVE) {
+            grille[x][y].setStatus(Case.CASE_NOUVELLE);
+        }
     }
 }

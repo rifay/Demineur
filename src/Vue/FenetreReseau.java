@@ -54,6 +54,7 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
     private final int lenght;
     private GridBoardReseau grille;
     private JButton gridButton[][];
+    private boolean messageEnvoye=false;
 
     public FenetreReseau(int niveauPartie, int numJoueur) {
         initComponents();
@@ -75,7 +76,7 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
         gridButton = new JButton[height][lenght];
         jPanel_Principal.setLayout(new GridBagLayout());
         jPanel_Principal.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-        
+
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < lenght; j++) {
                 final int x = i;
@@ -325,27 +326,23 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
             String message;
             if (tempGrid.getEtatPartie() == tempGrid.PARTIE_GAGNE) {
                 message = " Bravo ! Vous avez gagné !";
-                String name = JOptionPane.showInputDialog(message + "\nVotre nom pour enregistrer votre score: ");
-                grille.sauvegarder(name);
-            
+               
             } else {
                 message = "Perdu ! Dommage !";
             }
-            int n = JOptionPane.showOptionDialog(this,
-                    message + "\nQue voulez-vous faire ?",
-                    "What's next ... ?",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE,
-                    null, //do not use a custom Icon
-                    options, //the titles of buttons
-                    options[0]); //default button title
-            if (n == 0) {
-                grille.initGrille();
-            } else {
-                this.dispose();
-                MenuScreen.main(new String[2]);
-
+            if (!messageEnvoye)
+            {
+                 messageEnvoye=true;
+                 JOptionPane.showMessageDialog(this,message+"\nMerci d'avoir joué !",
+                    "Fin de la partie",
+                    JOptionPane.INFORMATION_MESSAGE);
+                 this.dispose();
+            MenuScreen.main(new String[2]);
             }
+          
+
+           
+
         }
 
         //gridLabel[tempCase.getX()][tempCase.getY()].setText(Integer.toString(tempCase.getValue()));
