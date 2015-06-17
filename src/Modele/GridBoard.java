@@ -100,7 +100,7 @@ public class GridBoard extends Observable implements Serializable {
         cptUsedCase = 0;
         nbFlagLeft = NB_BOMBES;
         tempsDebut = System.currentTimeMillis();
-        //startChrono();
+        startChrono();
         etatPartie = PARTIE_EN_COURS;
         allScore = chargerScore();
 

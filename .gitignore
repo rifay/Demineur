@@ -58,3 +58,4 @@ build/classes/Vue/MenuScreen.form
 *.class
 *.class
 *.ser
+build/classes/Modele/GridBoard.class
