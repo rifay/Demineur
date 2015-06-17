@@ -13,19 +13,21 @@ public abstract class ObjetConnecte {
     protected final int PORT_S_LEFT = 2526;
     protected int PORT_C_RIGHT;
     protected int PORT_C_LEFT;
-    protected static int longueurMax = 8;
+    protected static int longueurMax = 1877;
     protected DatagramSocket ds_right;
     protected DatagramSocket ds_left;
     protected boolean connexionEtablie = false;
-
+    protected GridBoardReseau grille;
+            
     /**
      * Cr?e un objet connect? et initialise l'InetAddress du serveur s'il cela
      * n'a pas d?j? ?t? fait.
      */
-    public ObjetConnecte() {
+    public ObjetConnecte(GridBoardReseau grille) {
         if (adresseIPServeur == null) {
             try {
                 adresseIPServeur = InetAddress.getByName("localhost");
+                this.grille=grille;
             } catch (UnknownHostException ex) {
                 System.err.println(ex);
             }
@@ -75,8 +77,8 @@ public abstract class ObjetConnecte {
      */
     public int[] receiveNextCoordonnees(int action)
     {
-         byte[] buffer = new byte[longueurMax];
-                DatagramPacket dp = new DatagramPacket(buffer, longueurMax);
+         byte[] buffer = new byte[8];
+                DatagramPacket dp = new DatagramPacket(buffer, buffer.length);
                 try {
                     if(action == GridBoardReseau.ACTION_RIGHT)
                     {
@@ -109,7 +111,7 @@ public abstract class ObjetConnecte {
     
     public abstract void startConnexion();
    
-    public abstract void startGame(CaseReseau[][] grille);
+    public abstract void startGame();
     
     public DatagramPacket receiveData()
     {

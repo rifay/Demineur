@@ -76,7 +76,7 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
         gridButton = new JButton[height][lenght];
         jPanel_Principal.setLayout(new GridBagLayout());
         jPanel_Principal.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-
+        
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < lenght; j++) {
                 final int x = i;
@@ -108,7 +108,6 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
 
             }
         }
-        //grille.startChrono();
         grille.addObserver(this);
         //this.add();
     }
