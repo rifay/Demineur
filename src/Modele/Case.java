@@ -5,6 +5,7 @@
  */
 package Modele;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author rifayath.david
  */
-public class Case {
+public class Case implements Serializable{
 
     public static final int CASE_NOUVELLE = 0;
     public static final int CASE_AFFICHER = 1;
@@ -24,6 +25,9 @@ public class Case {
     private boolean bombe;
     public static GridBoard grille;
 
+    protected Case(){
+        //init();
+    }
     public Case(GridBoard grille) {
         this.status = CASE_NOUVELLE;
         value = 0;
@@ -100,7 +104,7 @@ public class Case {
     }
 
     void init() {
-         this.status = CASE_NOUVELLE;
+        this.status = CASE_NOUVELLE;
         value = 0;
         bombe=false;
     }

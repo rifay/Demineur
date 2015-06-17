@@ -16,6 +16,9 @@ public class CaseReseau extends Case implements Serializable{
     public final static int PLAYER_OTHER=1;
     int numeroPlayer;
     
+    public CaseReseau(){
+        super();
+    }
     public CaseReseau(GridBoard grille) {
         super(grille);
         numeroPlayer = PLAYER_ME;

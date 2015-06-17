@@ -15,11 +15,13 @@ import java.util.logging.Logger;
 public class Client extends ObjetConnecte {
 
 
-    public Client() {
-        super();
+    public Client(GridBoardReseau grille) {
+        super(grille);
         try {
             ds_left = new DatagramSocket();
             ds_right = new DatagramSocket();
+            PORT_C_LEFT=ds_left.getLocalPort();
+            PORT_C_RIGHT=ds_right.getLocalPort();
             System.out.println("Port utilisé : " + ds_left.getLocalPort());
             startConnexion();
         } catch (SocketException ex) {
@@ -54,12 +56,12 @@ public class Client extends ObjetConnecte {
     public void startConnexion() {
         byte[] data = ByteBuffer.allocate(4).putInt(PORT_C_RIGHT).array();
         sendRequest(data, GridBoardReseau.ACTION_LEFT);
-        System.out.println("Client connecté /PortL : " + PORT_C_LEFT);
+        System.out.println("Client connecté /PortR : " + PORT_C_RIGHT);
 
     }
     
     @Override
-    public void startGame(CaseReseau[][] grille)
+    public void startGame()
     {
         try {
             System.out.println("Client wait to start game...");
@@ -68,10 +70,13 @@ public class Client extends ObjetConnecte {
             byte[] data = dp.getData();
             ByteArrayInputStream bis = new ByteArrayInputStream(data);
             ObjectInput in = new ObjectInputStream(bis);
-            grille = (CaseReseau[][])in.readObject();
+            grille.setNiveau((Integer) in.readObject());
+            CaseReseau[][] grilleServ = (CaseReseau[][])in.readObject();
             System.out.println("Grille recu !");
+            grille.setGrille(grilleServ);
         } catch (Exception ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
 }

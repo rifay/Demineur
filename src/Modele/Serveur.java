@@ -21,9 +21,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Serveur extends ObjetConnecte {
-
-    public Serveur() {
-        super();
+    
+    
+    public Serveur(GridBoardReseau grille) {
+        super(grille);
         try {
             ds_left = new DatagramSocket(PORT_S_LEFT);
             ds_right = new DatagramSocket(PORT_S_RIGHT);
@@ -41,6 +42,7 @@ public class Serveur extends ObjetConnecte {
         int portright = ByteBuffer.wrap(Arrays.copyOfRange(data, 0, 4)).getInt();
         PORT_C_LEFT = dp.getPort();
         PORT_C_RIGHT = portright;
+        System.out.println("Serceur :Port R client : " + portright);
         adresseIPClient = dp.getAddress();
         System.out.println("Client connecté IP=" + adresseIPClient.toString() + "/PortL : " + PORT_C_LEFT);
 
@@ -68,14 +70,16 @@ public class Serveur extends ObjetConnecte {
     }
     
     @Override
-    public void startGame(CaseReseau[][] grille)
+    public void startGame()
     {
         ObjectOutputStream out = null;
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             out = new ObjectOutputStream(bos);
-            out.writeObject(grille);
+            out.writeObject(new Integer(grille.getNiveau()));
+            out.writeObject(grille.getGrille());
             byte[] data = bos.toByteArray();
+            System.out.println("Size : " + data.length);
             //On envoie la grille générée.
             sendRequest(data, GridBoardReseau.ACTION_LEFT);
         } catch (IOException ex) {

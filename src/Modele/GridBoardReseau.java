@@ -22,34 +22,34 @@ public class GridBoardReseau extends GridBoard {
     public GridBoardReseau(int niveauPartie, int typeConnexion) {
         super();
         if (typeConnexion == CLIENT) {
-            connexion = new Client();
+            connexion = new Client(this);
+            connexion.startGame();
+            Case.grille=this;
+            initNiveau();
+            initEnvironnement();
+            nbCases=height*lenght;
         } else {
-            connexion = new Serveur();
+            connexion = new Serveur(this);
+            niveau = niveauPartie;
+            initNiveau();
+            grille = new CaseReseau[height][lenght];
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < lenght; j++) {
+                    grille[i][j] = new CaseReseau(this);
+                }
+            }
+            nbCases = this.lenght * this.height;
+            initGrille();
+            connexion.startGame();
         }
-        niveau = niveauPartie;
-        if (niveau == LVL_FACILE) {
-            height = 9;
-            lenght = 9;
-            NB_BOMBES = 10;
-        } else if (niveau == LVL_MOYEN) {
-            height = 16;
-            lenght = 16;
-            NB_BOMBES = 40;
-        } else {
-            height = 30;
-            lenght = 16;
-            NB_BOMBES = 99;
-        }
-        grille = new CaseReseau[height][lenght];
+        
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < lenght; j++) {
-                grille[i][j] = new CaseReseau(this);
                 coordonnesMap.put(grille[i][j], new Point(j, i));
             }
         }
-        nbCases = this.lenght * this.height;
-        initGrille();
-        connexion.startGame((CaseReseau[][])grille);
+       
+        
         //Listener du clique droit
         Thread listenerRight = new Thread(new Runnable() {
             @Override
@@ -142,5 +142,35 @@ public class GridBoardReseau extends GridBoard {
         ((CaseReseau) grille[x][y]).setNumeroPlayer(CaseReseau.PLAYER_OTHER);
         setChanged();
         notifyObservers();
+    }
+
+    void setGrille(CaseReseau[][] grille) {
+        this.grille=grille;
+    }
+    
+    CaseReseau[][] setGrille() {
+        return (CaseReseau[][]) grille;
+    }
+
+    void setNiveau(int niv) {
+        niveau = niv;
+    }
+
+    private void initNiveau() {
+        if (niveau == LVL_FACILE) {
+                height = 9;
+                lenght = 9;
+                NB_BOMBES = 10;
+            } else if (niveau == LVL_MOYEN) {
+                height = 16;
+                lenght = 16;
+                NB_BOMBES = 40;
+            } else {
+                height = 30;
+                lenght = 16;
+                NB_BOMBES = 99;
+            }
+           
+            nbCases = this.lenght * this.height;
     }
 }

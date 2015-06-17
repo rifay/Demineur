@@ -35,9 +35,9 @@ public class GridBoard extends Observable implements Serializable {
     public final int GAME_OVER = -1;
     public final int PARTIE_GAGNE = 1;
     public int NB_BOMBES;
-    static public final int LVL_FACILE=1;
-    static public final int LVL_MOYEN=2;
-    static public final int LVL_DIFFICILE=3;
+    static public final int LVL_FACILE = 1;
+    static public final int LVL_MOYEN = 2;
+    static public final int LVL_DIFFICILE = 3;
     Case[][] grille;
     int lenght;
     int height;
@@ -55,12 +55,12 @@ public class GridBoard extends Observable implements Serializable {
     List<Score> difficileScore = null;
     int niveau;
 
-    protected GridBoard()
-    {
+    protected GridBoard() {
         this.allScore = new HashMap<String, List<Score>>();
         coordonnesMap = new HashMap<Object, Point>();
+        
     }
-    
+
     public GridBoard(int niveauPartie) {
         this();
         niveau = niveauPartie;
@@ -96,15 +96,20 @@ public class GridBoard extends Observable implements Serializable {
         return height;
     }
 
-    public void initGrille() {
+    public void initEnvironnement() {
         cptUsedCase = 0;
         nbFlagLeft = NB_BOMBES;
-        coordonnesMap.clear();
         tempsDebut = System.currentTimeMillis();
-        startChrono();
+        //startChrono();
         etatPartie = PARTIE_EN_COURS;
         allScore = chargerScore();
-         for (int i = 0; i < height; i++) {
+
+    }
+
+    public void initGrille() {
+
+        initEnvironnement();
+        for (int i = 0; i < height; i++) {
             for (int j = 0; j < lenght; j++) {
                 grille[i][j].init();
             }
@@ -320,32 +325,32 @@ public class GridBoard extends Observable implements Serializable {
         } else {
             allScore = new HashMap<String, List<Score>>();
         }
-       
-            if (scores != null) {
-                if (scores.size() >= 10 && isBetterScore(newScore, scores)) {
-                    for (int i=9;i<scores.size();i++){
-                        scores.remove(i);
-                    }
-                    //scores.remove(9);
-                }
-                scores.add(newScore);
-                Collections.sort(scores);
-            } else {
-                scores = new ArrayList<>();
-                scores.add(newScore);
-            }
-            allScore.put(String.valueOf(niveau), scores);
-            try {
-                FileOutputStream score = new FileOutputStream(new File("score.ser"));
-                ObjectOutputStream out = new ObjectOutputStream(score);
-                out.writeObject(allScore);
-                out.close();
-                score.close();
-            } catch (IOException i) {
-                i.printStackTrace();
-            }
 
-        
+        if (scores != null) {
+            if (scores.size() >= 10 && isBetterScore(newScore, scores)) {
+                for (int i = 9; i < scores.size(); i++) {
+                    scores.remove(i);
+                }
+                //scores.remove(9);
+            }
+            scores.add(newScore);
+            Collections.sort(scores);
+        } else {
+            scores = new ArrayList<>();
+            scores.add(newScore);
+        }
+        allScore.put(String.valueOf(niveau), scores);
+        try {
+            FileOutputStream score = new FileOutputStream(new File("score.ser"));
+            ObjectOutputStream out = new ObjectOutputStream(score);
+            out.writeObject(allScore);
+            out.close();
+            score.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+        }
+
+
     }
 
     private boolean isBetterScore(Score newScore, List<Score> listScore) {
@@ -376,12 +381,8 @@ public class GridBoard extends Observable implements Serializable {
 
         }
     }
-    
-    
+
     public int getNiveau() {
         return niveau;
     }
-
-    
-    
 }
