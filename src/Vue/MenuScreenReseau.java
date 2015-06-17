@@ -6,24 +6,22 @@
 package Vue;
 
 import Modele.GridBoard;
-import java.awt.Frame;
+import Modele.GridBoardReseau;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author rifayath.david
  */
-public class MenuScreen extends javax.swing.JDialog {
+public class MenuScreenReseau extends javax.swing.JDialog {
 
     private int niveauPartie;
-    private Frame parent;
+
     /**
      * Creates new form MenuScreen
      */
-    public MenuScreen(Frame parent, boolean modal) {
+    public MenuScreenReseau(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        niveauPartie = -1;
-        this.parent=parent;
         initComponents();
     }
 
@@ -37,16 +35,17 @@ public class MenuScreen extends javax.swing.JDialog {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jRadioButton_NiveauF = new javax.swing.JRadioButton();
         jRadioButton_NiveauM = new javax.swing.JRadioButton();
         jRadioButton_NiveauD = new javax.swing.JRadioButton();
         jButton_lancerPartie = new javax.swing.JButton();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jItemModeMulti = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        jButton_quitter = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jRadioButton_Serveur = new javax.swing.JRadioButton();
+        jRadioButton_Client = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -60,7 +59,6 @@ public class MenuScreen extends javax.swing.JDialog {
         jPanel1.setName(""); // NOI18N
 
         buttonGroup1.add(jRadioButton_NiveauF);
-        jRadioButton_NiveauF.setSelected(true);
         jRadioButton_NiveauF.setText("Facile");
 
         buttonGroup1.add(jRadioButton_NiveauM);
@@ -100,50 +98,87 @@ public class MenuScreen extends javax.swing.JDialog {
             }
         });
 
-        jMenu1.setText("File");
-
-        jItemModeMulti.setText("Mode Multijoueur");
-        jItemModeMulti.addActionListener(new java.awt.event.ActionListener() {
+        jButton_quitter.setText("Quitter le mode");
+        jButton_quitter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jItemModeMultiActionPerformed(evt);
+                jButton_quitterActionPerformed(evt);
             }
         });
-        jMenu1.add(jItemModeMulti);
 
-        jMenuBar1.add(jMenu1);
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Joueur"));
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
+        buttonGroup2.add(jRadioButton_Serveur);
+        jRadioButton_Serveur.setText("Serveur");
+        jRadioButton_Serveur.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton_ServeurActionPerformed(evt);
+            }
+        });
 
-        setJMenuBar(jMenuBar1);
+        buttonGroup2.add(jRadioButton_Client);
+        jRadioButton_Client.setText("Client");
+        jRadioButton_Client.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton_ClientActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jRadioButton_Serveur)
+                .addGap(66, 66, 66)
+                .addComponent(jRadioButton_Client)
+                .addGap(90, 90, 90))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jRadioButton_Serveur)
+                    .addComponent(jRadioButton_Client))
+                .addContainerGap(23, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(158, 158, 158)
-                .addComponent(jButton_lancerPartie)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(59, 59, 59)
+                .addComponent(jButton_lancerPartie)
+                .addGap(64, 64, 64)
+                .addComponent(jButton_quitter)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addComponent(jLabel1)
-                .addGap(31, 31, 31)
+                .addGap(54, 54, 54)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton_lancerPartie)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton_lancerPartie)
+                    .addComponent(jButton_quitter))
+                .addGap(41, 41, 41))
         );
 
         pack();
@@ -163,70 +198,44 @@ public class MenuScreen extends javax.swing.JDialog {
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
         } else {
-            dispose();
-            new FenetrePrincipale(niveauPartie).setVisible(true);
+            new FenetreReseau(niveauPartie, GridBoardReseau.SERVEUR).setVisible(true);
         }
 
 
     }//GEN-LAST:event_jButton_lancerPartieActionPerformed
 
-    private void jItemModeMultiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jItemModeMultiActionPerformed
-        new MenuScreenReseau(parent, true).setVisible(true);
-    }//GEN-LAST:event_jItemModeMultiActionPerformed
+    private void jButton_quitterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_quitterActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton_quitterActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MenuScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MenuScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MenuScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MenuScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void jRadioButton_ServeurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton_ServeurActionPerformed
+        this.jPanel1.setEnabled(true);
+        this.jRadioButton_NiveauD.setEnabled(true);
+        this.jRadioButton_NiveauM.setEnabled(true);
+        this.jRadioButton_NiveauF.setEnabled(true);
+    }//GEN-LAST:event_jRadioButton_ServeurActionPerformed
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                MenuScreen dialog = new MenuScreen(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
+    private void jRadioButton_ClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton_ClientActionPerformed
+        this.jPanel1.setEnabled(false);
+        this.jRadioButton_NiveauD.setEnabled(false);
+        this.jRadioButton_NiveauM.setEnabled(false);
+        this.jRadioButton_NiveauF.setEnabled(false);
+    }//GEN-LAST:event_jRadioButton_ClientActionPerformed
+
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JButton jButton_lancerPartie;
-    private javax.swing.JMenuItem jItemModeMulti;
+    private javax.swing.JButton jButton_quitter;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JRadioButton jRadioButton_Client;
     private javax.swing.JRadioButton jRadioButton_NiveauD;
     private javax.swing.JRadioButton jRadioButton_NiveauF;
     private javax.swing.JRadioButton jRadioButton_NiveauM;
+    private javax.swing.JRadioButton jRadioButton_Serveur;
     // End of variables declaration//GEN-END:variables
 }

@@ -55,7 +55,7 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
     private GridBoardReseau grille;
     private JButton gridButton[][];
 
-    public FenetreReseau(int niveauPartie) {
+    public FenetreReseau(int niveauPartie, int numJoueur) {
         initComponents();
 
 
@@ -70,7 +70,7 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
                 setSize(600, 450);
                 break;
         }
-        grille = new GridBoardReseau(niveauPartie, GridBoardReseau.CLIENT);
+        grille = new GridBoardReseau(niveauPartie, numJoueur);
         height = grille.getHeight();
         lenght = grille.getLenght();
         gridButton = new JButton[height][lenght];
