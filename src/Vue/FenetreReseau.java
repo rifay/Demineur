@@ -322,19 +322,23 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
             Object[] options = new Object[2];
             options[0] = "Recommencer";
             options[1] = "Nouvelle Partie";
-
+            String message;
+            if (tempGrid.getEtatPartie() == tempGrid.PARTIE_GAGNE) {
+                message = " Bravo ! Vous avez gagné !";
+                String name = JOptionPane.showInputDialog(message + "\nVotre nom pour enregistrer votre score: ");
+                grille.sauvegarder(name);
+            
+            } else {
+                message = "Perdu ! Dommage !";
+            }
             int n = JOptionPane.showOptionDialog(this,
-                    "Que voulez-vous faire ?",
+                    message + "\nQue voulez-vous faire ?",
                     "What's next ... ?",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE,
                     null, //do not use a custom Icon
                     options, //the titles of buttons
                     options[0]); //default button title
-            if (grille.getEtatPartie() == grille.PARTIE_GAGNE) {
-                String name = JOptionPane.showInputDialog("Votre nom: ");
-                grille.sauvegarder(name);
-            }
             if (n == 0) {
                 grille.initGrille();
             } else {
