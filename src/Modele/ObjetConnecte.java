@@ -13,7 +13,7 @@ public abstract class ObjetConnecte {
     protected final int PORT_S_LEFT = 2526;
     protected int PORT_C_RIGHT;
     protected int PORT_C_LEFT;
-    protected static int longueurMax = 1877;
+    protected static int longueurMax = 9668;
     protected DatagramSocket ds_right;
     protected DatagramSocket ds_left;
     protected boolean connexionEtablie = false;

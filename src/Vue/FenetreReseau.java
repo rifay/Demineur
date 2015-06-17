@@ -57,9 +57,8 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
 
     public FenetreReseau(int niveauPartie) {
         initComponents();
-
-
-        switch (niveauPartie) {
+        grille = new GridBoardReseau(niveauPartie, GridBoardReseau.CLIENT);
+        switch (grille.getNiveau()) {
             case GridBoard.LVL_FACILE:
                 setSize(450, 300);
                 break;
@@ -70,7 +69,6 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
                 setSize(600, 450);
                 break;
         }
-        grille = new GridBoardReseau(niveauPartie, GridBoardReseau.CLIENT);
         height = grille.getHeight();
         lenght = grille.getLenght();
         gridButton = new JButton[height][lenght];
@@ -88,7 +86,6 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
                 gridButton[i][j].setFocusPainted(false);
                 gridButton[i][j].setMargin(new java.awt.Insets(1, 1, 1, 1));
                 gridButton[i][j].setFont(new java.awt.Font("Tahoma", 0, 10));
-                gridButton[i][j].setText(Integer.toString(grille.getGrille()[i][j].getValue()));
                 gridButton[i][j].addMouseListener(new MouseAdapter() {
                     @Override
                     public void mousePressed(MouseEvent e) {
@@ -144,6 +141,7 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
         jMenuItem_scores = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel_chrono.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel_chrono.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/clock.png"))); // NOI18N
@@ -206,7 +204,7 @@ public class FenetreReseau extends javax.swing.JFrame implements Observer {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel_Principal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()

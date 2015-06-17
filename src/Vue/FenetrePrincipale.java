@@ -48,13 +48,13 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
         initComponents();
         switch (niveauPartie) {
             case GridBoard.LVL_FACILE:
-                setSize(450,300);
+                setSize(450, 300);
                 break;
             case GridBoard.LVL_MOYEN:
-                setSize(450,450);
+                setSize(450, 450);
                 break;
             case GridBoard.LVL_DIFFICILE:
-                setSize(600,450);
+                setSize(600, 450);
                 break;
         }
         grille = new GridBoard(niveauPartie);
@@ -75,7 +75,7 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                 gridButton[i][j].setFocusPainted(false);
                 gridButton[i][j].setMargin(new java.awt.Insets(1, 1, 1, 1));
                 gridButton[i][j].setFont(new java.awt.Font("Tahoma", 0, 10));
-                gridButton[i][j].setText(Integer.toString(grille.getGrille()[i][j].getValue()));
+
                 gridButton[i][j].addMouseListener(new MouseAdapter() {
                     @Override
                     public void mousePressed(MouseEvent e) {
@@ -132,6 +132,7 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
         jMenuItem_scores = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel_chrono.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel_chrono.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/clock.png"))); // NOI18N
@@ -148,9 +149,9 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_HautLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jlabelBombLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 132, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
                 .addComponent(jLabel_chrono, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(36, 36, 36))
         );
         jPanel_HautLayout.setVerticalGroup(
             jPanel_HautLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,11 +169,11 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
         jPanel_Principal.setLayout(jPanel_PrincipalLayout);
         jPanel_PrincipalLayout.setHorizontalGroup(
             jPanel_PrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 306, Short.MAX_VALUE)
         );
         jPanel_PrincipalLayout.setVerticalGroup(
             jPanel_PrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 53, Short.MAX_VALUE)
+            .addGap(0, 259, Short.MAX_VALUE)
         );
 
         jMenu_Fichier.setText("Fichier");
@@ -195,21 +196,21 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel_Haut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel_Principal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel_Principal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(47, Short.MAX_VALUE)
+                .addComponent(jPanel_Haut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jPanel_Haut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel_Principal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(72, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         pack();
@@ -270,53 +271,57 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
         DateFormat formatter = new SimpleDateFormat("mm:ss");
         jLabel_chrono.setText(formatter.format(tempGrid.getTimeActuel()));
         jlabelBombLeft.setText("" + tempGrid.getNbFlagLeft());
-        
-            for (int i = 0; i < height; i++) {
-                for (int j = 0; j < lenght; j++) {
-                    Case tempCase = tempGrid.getGrille()[i][j];
-                    if (tempCase.getStatus() == Case.CASE_AFFICHER) {
-                        gridButton[i][j].setText(colorInt(tempCase.getValue()));
-                        //gridButton[i][j].setEnabled(false);
-                        gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-                    } else if (tempCase.getStatus() == Case.CASE_INUTILE) {
-                       // gridButton[i][j].setEnabled(false);
-                        gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
-                        gridButton[i][j].setIcon(null);
-                        gridButton[i][j].setText("");
-                    } else if (tempCase.getStatus() == Case.CASE_DRAPEAU) {
-                        gridButton[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/flag.png")));
-                        gridButton[i][j].setText("");
-                    } else if (tempCase.getStatus() == Case.CASE_INTERROGATIVE) {
-                        gridButton[i][j].setIcon(null);
-                        gridButton[i][j].setText("?");
-                    } else if (tempCase.getStatus() == Case.CASE_NOUVELLE) {
-                        gridButton[i][j].setIcon(null);
-                        gridButton[i][j].setText("");
-                        gridButton[i][j].setEnabled(true);
-                        gridButton[i][j].setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-                    }
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < lenght; j++) {
+                Case tempCase = tempGrid.getGrille()[i][j];
+                if (tempCase.getStatus() == Case.CASE_AFFICHER) {
+                    gridButton[i][j].setText(colorInt(tempCase.getValue()));
+                    //gridButton[i][j].setEnabled(false);
+                    gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+                } else if (tempCase.getStatus() == Case.CASE_INUTILE) {
+                    // gridButton[i][j].setEnabled(false);
+                    gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
+                    gridButton[i][j].setIcon(null);
+                    gridButton[i][j].setText("");
+                } else if (tempCase.getStatus() == Case.CASE_DRAPEAU) {
+                    gridButton[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/flag.png")));
+                    gridButton[i][j].setText("");
+                } else if (tempCase.getStatus() == Case.CASE_INTERROGATIVE) {
+                    gridButton[i][j].setIcon(null);
+                    gridButton[i][j].setText("?");
+                } else if (tempCase.getStatus() == Case.CASE_NOUVELLE) {
+                    gridButton[i][j].setIcon(null);
+                    gridButton[i][j].setText("");
+                    gridButton[i][j].setEnabled(true);
+                    gridButton[i][j].setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
                 }
             }
-       if (tempGrid.getEtatPartie() != tempGrid.PARTIE_EN_COURS) {
+        }
+        if (tempGrid.getEtatPartie() != tempGrid.PARTIE_EN_COURS) {
             //L'utilisateur a perdu ou gagné
             afficherGrilleFinale(grille.getEtatPartie());
             Object[] options = new Object[2];
             options[0] = "Recommencer";
             options[1] = "Nouvelle Partie";
-
+            String message;
+            if (tempGrid.getEtatPartie() == tempGrid.PARTIE_GAGNE) {
+                message = " Bravo ! Vous avez gagné !";
+                String name = JOptionPane.showInputDialog(message + "\nVotre nom pour enregistrer votre score: ");
+                grille.sauvegarder(name);
+            
+            } else {
+                message = "Perdu ! Dommage !";
+            }
             int n = JOptionPane.showOptionDialog(this,
-                    "Que voulez-vous faire ?",
+                    message + "\nQue voulez-vous faire ?",
                     "What's next ... ?",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE,
                     null, //do not use a custom Icon
                     options, //the titles of buttons
                     options[0]); //default button title
-            if (grille.getEtatPartie() == grille.PARTIE_GAGNE) {
-                String name = JOptionPane.showInputDialog("Votre nom: ");
-                grille.sauvegarder(name);
-            }
             if (n == 0) {
                 grille.initGrille();
             } else {
@@ -349,22 +354,20 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                         gridButton[i][j].setText("");
                     }
                 } else if (grille.getGrille()[i][j].getBombe()) {
-                    if (grille.getGrille()[i][j].getStatus()==Case.CASE_AFFICHER)
-                    {
+                    if (grille.getGrille()[i][j].getStatus() == Case.CASE_AFFICHER) {
                         gridButton[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/bombExplosed.png")));
                         gridButton[i][j].setText("");
-                    }else 
-                    {
+                    } else {
                         gridButton[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/bomb.png")));
                         gridButton[i][j].setText("");
                     }
-                    
-                }else if (grille.getGrille()[i][j].getStatus() == Case.CASE_AFFICHER) {
-                        gridButton[i][j].setText(colorInt(grille.getGrille()[i][j].getValue()));
-                        
-                        gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-                   
+                } else if (grille.getGrille()[i][j].getStatus() == Case.CASE_AFFICHER) {
+                    gridButton[i][j].setText(colorInt(grille.getGrille()[i][j].getValue()));
+
+                    gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+
                 }
                 //gridButton[i][j].setEnabled(false);
             }
@@ -376,9 +379,9 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
     }
 
     private String colorInt(int value) {
-       String color="";
-        switch(value){
-            case 1: 
+        String color = "";
+        switch (value) {
+            case 1:
                 color = "0000FF";
                 break;
             case 2:
@@ -396,8 +399,8 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
             default:
                 color = "008284";
                 break;
-                
+
         }
-       return "<html><span style=\"font-weight:bold; color:#"+color+";\">"+value+"</span></html>";
+        return "<html><span style=\"font-weight:bold; color:#" + color + ";\">" + value + "</span></html>";
     }
 }
