@@ -7,6 +7,7 @@ package Vue;
 
 import Modele.GridBoard;
 import Modele.GridBoardReseau;
+import java.awt.Frame;
 import javax.swing.JOptionPane;
 
 /**
@@ -16,14 +17,17 @@ import javax.swing.JOptionPane;
 public class MenuScreenReseau extends javax.swing.JDialog {
 
     private int niveauPartie;
+    MenuScreen parentScreen;
 
     /**
      * Creates new form MenuScreen
      */
-    public MenuScreenReseau(java.awt.Frame parent, boolean modal) {
+    public MenuScreenReseau(java.awt.Frame parent, boolean modal, MenuScreen parentScreen) {
         super(parent, modal);
         initComponents();
+        this.parentScreen=parentScreen;
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -59,6 +63,7 @@ public class MenuScreenReseau extends javax.swing.JDialog {
         jPanel1.setName(""); // NOI18N
 
         buttonGroup1.add(jRadioButton_NiveauF);
+        jRadioButton_NiveauF.setSelected(true);
         jRadioButton_NiveauF.setText("Facile");
 
         buttonGroup1.add(jRadioButton_NiveauM);
@@ -108,6 +113,7 @@ public class MenuScreenReseau extends javax.swing.JDialog {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Joueur"));
 
         buttonGroup2.add(jRadioButton_Serveur);
+        jRadioButton_Serveur.setSelected(true);
         jRadioButton_Serveur.setText("Serveur");
         jRadioButton_Serveur.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -197,8 +203,19 @@ public class MenuScreenReseau extends javax.swing.JDialog {
                     "Veuillez choisir le niveau de la partie",
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
-        } else {
-            new FenetreReseau(niveauPartie, GridBoardReseau.SERVEUR).setVisible(true);
+        }else {
+            
+            dispose();
+            if (jRadioButton_Serveur.isSelected()){
+                JOptionPane.showMessageDialog(this,"En attente de joueur...",
+                    "En attente de joueur...",
+                    JOptionPane.INFORMATION_MESSAGE);
+                new FenetreReseau(niveauPartie, GridBoardReseau.SERVEUR).setVisible(true);
+            }else {
+                new FenetreReseau(niveauPartie, GridBoardReseau.CLIENT).setVisible(true);
+            }
+            
+            
         }
 
 
@@ -206,6 +223,7 @@ public class MenuScreenReseau extends javax.swing.JDialog {
 
     private void jButton_quitterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_quitterActionPerformed
         this.dispose();
+        parentScreen.setVisible(true);
     }//GEN-LAST:event_jButton_quitterActionPerformed
 
     private void jRadioButton_ServeurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton_ServeurActionPerformed

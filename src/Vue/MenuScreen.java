@@ -171,7 +171,8 @@ public class MenuScreen extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton_lancerPartieActionPerformed
 
     private void jItemModeMultiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jItemModeMultiActionPerformed
-        new MenuScreenReseau(parent, true).setVisible(true);
+        this.setVisible(false);
+        new MenuScreenReseau(parent, true, this).setVisible(true);
     }//GEN-LAST:event_jItemModeMultiActionPerformed
 
     /**

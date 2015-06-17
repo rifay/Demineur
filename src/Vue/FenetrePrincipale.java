@@ -130,6 +130,8 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu_Fichier = new javax.swing.JMenu();
         jMenuItem_scores = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -186,6 +188,22 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
         });
         jMenu_Fichier.add(jMenuItem_scores);
 
+        jMenuItem1.setText("Recommencer");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu_Fichier.add(jMenuItem1);
+
+        jMenuItem2.setText("Nouvelle Partie");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu_Fichier.add(jMenuItem2);
+
         jMenuBar1.add(jMenu_Fichier);
 
         setJMenuBar(jMenuBar1);
@@ -196,12 +214,10 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel_Principal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel_Principal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel_Haut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(47, Short.MAX_VALUE)
-                .addComponent(jPanel_Haut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(37, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -220,6 +236,17 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
         ScoreScreen scoreScreen = new ScoreScreen(this, true, grille);
         scoreScreen.setVisible(true);
     }//GEN-LAST:event_jMenuItem_scoresActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+
+        grille.initGrille();
+
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        this.dispose();
+        MenuScreen.main(new String[2]);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -258,6 +285,8 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel_chrono;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem_scores;
     private javax.swing.JMenu jMenu_Fichier;
     private javax.swing.JPanel jPanel_Haut;
@@ -310,7 +339,7 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                 message = " Bravo ! Vous avez gagné !";
                 String name = JOptionPane.showInputDialog(message + "\nVotre nom pour enregistrer votre score: ");
                 grille.sauvegarder(name);
-            
+
             } else {
                 message = "Perdu ! Dommage !";
             }
@@ -366,7 +395,6 @@ public class FenetrePrincipale extends javax.swing.JFrame implements Observer {
                     gridButton[i][j].setText(colorInt(grille.getGrille()[i][j].getValue()));
 
                     gridButton[i][j].setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
 
                 }
                 //gridButton[i][j].setEnabled(false);
